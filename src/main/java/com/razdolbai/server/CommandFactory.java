@@ -31,7 +31,7 @@ public class CommandFactory {
                 return createSendCommand(session, fieldMap);
             }
             case "/chid": {
-                return createIdentificationCommand(session, fieldMap);
+                return createChangeIdCommand(session, fieldMap);
             }
             case "/close": {
                 return createCloseCommand(session);
@@ -55,8 +55,8 @@ public class CommandFactory {
         return new SendCommand(session, message);
     }
 
-    private IdentificationCommand createIdentificationCommand(Session session, Map<String, String> fieldMap) {
+    private ChangeIdCommand createChangeIdCommand(Session session, Map<String, String> fieldMap) {
         String newNickname = fieldMap.get("msg");
-        return new IdentificationCommand(session, identificator, newNickname);
+        return new ChangeIdCommand(session, identificator, newNickname);
     }
 }
