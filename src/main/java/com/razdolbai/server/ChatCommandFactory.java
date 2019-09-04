@@ -21,7 +21,7 @@ public class ChatCommandFactory implements CommandFactory {
     }
 
     @Override
-    public Command createCommand(Session session, String message, String timeStamp) {
+    public Command createCommand(Session session, String message, String timestamp) {
         Map<String, String> fieldMap = parser.parse(message);
         String type = fieldMap.get("type");
         switch (type) {
@@ -29,10 +29,10 @@ public class ChatCommandFactory implements CommandFactory {
                 return createHistCommand(session);
             }
             case "/snd": {
-                return createSendCommand(session, fieldMap);
+                return createSendCommand(session, fieldMap, timestamp);
             }
             case "/chid": {
-                return createChangeIdCommand(session, fieldMap);
+                return createChangeIdCommand(session, fieldMap, timestamp);
             }
             case "/close": {
                 return createCloseCommand(session);
@@ -48,16 +48,16 @@ public class ChatCommandFactory implements CommandFactory {
     }
 
     private Command createCloseCommand(Session session) {
-        return new CloseCommand(session);
+        return new CloseCommand(session, sessionStore);
     }
 
-    private SendCommand createSendCommand(Session session, Map<String, String> fieldMap) {
+    private SendCommand createSendCommand(Session session, Map<String, String> fieldMap, String timestamp) {
         String message = fieldMap.get("msg");
-        return new SendCommand(session, message);
+        return new SendCommand(session, sessionStore, message, saver, timestamp);
     }
 
-    private ChangeIdCommand createChangeIdCommand(Session session, Map<String, String> fieldMap) {
+    private ChangeIdCommand createChangeIdCommand(Session session, Map<String, String> fieldMap, String timestamp) {
         String newNickname = fieldMap.get("msg");
-        return new ChangeIdCommand(session, identificator, newNickname);
+        return new ChangeIdCommand(session, identificator, newNickname, timestamp, sessionStore);
     }
 }
