@@ -53,7 +53,7 @@ public class CommandFactory {
 
     private SendCommand createSendCommand(Session session, Map<String, String> fieldMap) {
         String message = fieldMap.get("msg");
-        return new SendCommand(session, message);
+        return new SendCommand(session, sessionStore, message, saver);
     }
 
     private ChangeIdCommand createChangeIdCommand(Session session, Map<String, String> fieldMap) {
