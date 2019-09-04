@@ -23,7 +23,6 @@ public class SwitchingSaverTest {
 
     @Test
     public void shouldSaveAndNotSwitchIfLimitWasntReachedAndSameDate() throws IOException {
-
         File file = new File(SwitchingFileSaver.fileNameFormat("history", messageDateTime, 0));
         file.delete();
 
@@ -34,6 +33,7 @@ public class SwitchingSaverTest {
         sut.close();
 
         String filename = SwitchingFileSaver.fileNameFormat("history", messageDateTime,0);
+
 
         BufferedReader reader = new BufferedReader(new FileReader(filename));
 
