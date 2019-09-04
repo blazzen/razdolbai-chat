@@ -1,9 +1,11 @@
 package com.razdolbai.client;
+
 import java.io.*;
 import java.net.Socket;
 
 public class Client {
-    public static void main(String[] args) {
+
+    public static void main(String[] args) throws IOException {
 
         String[] existingCommands = {"/snd", "/hist", "/chid", "/close"};
 
@@ -16,20 +18,25 @@ public class Client {
                         new InputStreamReader(
                                 new BufferedInputStream(socket.getInputStream())))
         ) {
+            Thread thread = new Thread(() -> {
+                try {
+                    while (true) {
+                        String a = in.readLine();
+                        if (a != null) {
+                            System.out.println(a);
+                        }
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
+            thread.start();
+
             Proxy proxy = new Proxy(out);
             InputConsole inputConsole = new InputConsole(proxy);
-
-
             inputConsole.readCommand(existingCommands);
-
-
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
-
-
 }
-
-
