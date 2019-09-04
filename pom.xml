@@ -55,12 +55,6 @@
         <artifactId>pitest-maven</artifactId>
         <version>1.4.5</version>
         <configuration>
-          <targetClasses>
-            <param>com.acme.edu.ooaddemo2.*</param>
-          </targetClasses>
-          <targetTests>
-            <param>com.acme.edu.ooaddemo2.*</param>
-          </targetTests>
         </configuration>
         <executions>
           <execution>
