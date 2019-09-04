@@ -5,28 +5,36 @@ import com.razdolbai.server.commands.*;
 import java.util.Map;
 
 public class CommandFactory {
-    private final Parser parser = new Parser("\0", ":");
-    private final Server server;
+    private final Parser parser;
+    private final SessionStore sessionStore;
+    private final Saver saver;
+    private final Identificator identificator;
 
-    public CommandFactory(Server server) {
-        this.server = server;
+    public CommandFactory(Parser parser,
+                          SessionStore sessionStore,
+                          Saver saver,
+                          Identificator identificator) {
+        this.parser = parser;
+        this.sessionStore = sessionStore;
+        this.saver = saver;
+        this.identificator = identificator;
     }
 
-    public Command createCommand(String message) {
+    public Command createCommand(Session session, String message) {
         Map<String, String> fieldMap = parser.parse(message);
         String type = fieldMap.get("type");
         switch (type) {
             case "/hist": {
-                return createHistCommand(fieldMap);
+                return createHistCommand(session);
             }
             case "/snd": {
-                return createSendCommand(fieldMap);
+                return createSendCommand(session, fieldMap);
             }
             case "/chid": {
-                return createIdentificationCommand(fieldMap);
+                return createIdentificationCommand(session, fieldMap);
             }
             case "/close": {
-                return createCloseCommand(fieldMap);
+                return createCloseCommand(session);
             }
             default: {
                 throw new IllegalArgumentException("Unknown command type: " + type);
@@ -34,21 +42,21 @@ public class CommandFactory {
         }
     }
 
-    private Command createHistCommand(Map<String, String> fieldMap) {
-        return new HistoryCommand();
+    private Command createHistCommand(Session session) {
+        return new HistoryCommand(session);
     }
 
-    private Command createCloseCommand(Map<String, String> fieldMap) {
-        return new CloseCommand();
+    private Command createCloseCommand(Session session) {
+        return new CloseCommand(session);
     }
 
-    private SendCommand createSendCommand(Map<String, String> fieldMap) {
+    private SendCommand createSendCommand(Session session, Map<String, String> fieldMap) {
         String message = fieldMap.get("msg");
-        return new SendCommand(message);
+        return new SendCommand(session, message);
     }
 
-    private IdentificationCommand createIdentificationCommand(Map<String, String> fieldMap) {
-        String nickname = fieldMap.get("msg");
-        return new IdentificationCommand(server.getIdentificator(), nickname);
+    private IdentificationCommand createIdentificationCommand(Session session, Map<String, String> fieldMap) {
+        String newNickname = fieldMap.get("msg");
+        return new IdentificationCommand(session, identificator, newNickname);
     }
 }

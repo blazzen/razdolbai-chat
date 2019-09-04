@@ -1,22 +1,22 @@
 package com.razdolbai.server.commands;
 
 import com.razdolbai.server.Identificator;
-import com.razdolbai.server.OccupiedNicknameException;
+import com.razdolbai.server.Session;
 
 public class IdentificationCommand implements Command {
+    private final Session session;
     private final Identificator identificator;
-    private final String nickname;
+    private final String newNickname;
 
-    public IdentificationCommand(Identificator identificator, String nickname) {
+    public IdentificationCommand(Session session, Identificator identificator, String newNickname) {
+        this.session = session;
         this.identificator = identificator;
-        this.nickname = nickname;
+        this.newNickname = newNickname;
     }
 
     @Override
     public void execute() {
-        boolean isSucceed = identificator.takeNickname(nickname);
-        if (!isSucceed) {
-            throw new OccupiedNicknameException();
-        }
+        String oldNickname = session.getUsername();
+        identificator.changeNickname(oldNickname, newNickname);
     }
 }
