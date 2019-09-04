@@ -24,8 +24,10 @@ class InputParser {
             return null;
         }
 
-
-
+        if (message.length()>149){
+            System.out.println("Message is too long, try again");
+            return null;
+        }
 
         return new Command(commandType, message);
 

@@ -1,5 +1,7 @@
 package com.razdolbai.server;
 
+import com.razdolbai.server.commands.Command;
+
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -11,14 +13,20 @@ import java.util.concurrent.Executors;
 
 public class Server {
     private final ExecutorService executorService;
-    private final Parser parser;
+    private final CommandFabric commandFabric;
+    private final Identificator identificator;
     private Set<PrintWriter> clients;
     private ServerSocket connectionListener;
 
     public Server() {
+        this.identificator = new Identificator();
         this.executorService = Executors.newCachedThreadPool();
-        parser = new Parser();
+        this.commandFabric = new CommandFabric(this);
         clients = new HashSet<>();
+    }
+
+    public Identificator getIdentificator() {
+        return identificator;
     }
 
     private void startServer() {
@@ -72,6 +80,7 @@ public class Server {
         try {
             clients.add(socketOut);
             String readLine = socketIn.readLine();
+            Command command = commandFabric.createCommand(readLine);
             while (!("type:/close".equals(readLine)) && !(Thread.currentThread().isInterrupted())) {
                 readLine = LocalDateTime.now().toString() + " " + readLine;
                 System.out.println("debug: " + readLine);

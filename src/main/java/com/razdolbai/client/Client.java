@@ -18,7 +18,10 @@ public class Client {
         ) {
             Proxy proxy = new Proxy(out);
             InputConsole inputConsole = new InputConsole(proxy);
+
+
             inputConsole.readCommand(existingCommands);
+
 
         } catch (IOException e) {
             e.printStackTrace();
