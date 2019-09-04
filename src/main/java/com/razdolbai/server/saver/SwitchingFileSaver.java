@@ -44,19 +44,19 @@ public class SwitchingFileSaver extends FileSaver {
                 this.dateTime.getDayOfYear() != dateTime.getDayOfYear() ||
                 this.dateTime.getYear() != dateTime.getYear()) {
             sizeCounter = 0;
-            switchFile();
+            switchFile(dateTime);
         }
 
         super.save(string, dateTime);
         this.dateTime = dateTime;
     }
 
-    @Override
-    protected void open(String filename) throws IOException {
+
+    private void open(LocalDateTime dateTime) throws IOException {
         boolean opened = false;
         while(!opened) {
             try {
-                super.open(filename);
+                super.open(fileNameFormat(name, dateTime, fileCounter));
             } catch (FileExistsException e) {
                 fileCounter++;
                 continue;
@@ -65,11 +65,10 @@ public class SwitchingFileSaver extends FileSaver {
         }
     }
 
-    private void switchFile() throws IOException {
+    private void switchFile(LocalDateTime dateTime) throws IOException {
         super.close();
         fileCounter++;
-        super.filename = fileNameFormat(name, dateTime, fileCounter);
-        this.open(fileNameFormat(name, dateTime, fileCounter));
+        this.open(dateTime);
     }
 
 

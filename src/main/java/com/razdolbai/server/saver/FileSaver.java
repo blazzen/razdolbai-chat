@@ -12,11 +12,8 @@ public class FileSaver implements Saver {
         }
     }
 
-
-    String filename;
-
     private PrintWriter out;
-    private boolean isClosed = false;
+    private volatile boolean isClosed = false;
 
 
     public FileSaver (String filename) throws IOException {
@@ -25,7 +22,7 @@ public class FileSaver implements Saver {
 
 
     protected void open(String filename) throws  FileExistsException, IOException {
-        this.filename = filename;
+
         File file = new File(filename);
         if(file.exists()) {
             throw new FileExistsException();
@@ -38,16 +35,17 @@ public class FileSaver implements Saver {
     }
 
     @Override
-    public synchronized void save(String string, LocalDateTime dateTime) throws IOException{
+    public void save(String string, LocalDateTime dateTime) throws IOException{
         out.println("[" + dateTime.toString() + "]" + string);
     }
 
     @Override
-    public synchronized void close() {
+    public void close() {
         if (isClosed) return;
 
         isClosed = true;
 
+        out.flush();
         out.close();
     }
 }
