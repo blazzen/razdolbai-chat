@@ -13,7 +13,7 @@ import java.util.concurrent.Executors;
 
 public class Server {
     private final ExecutorService executorService;
-    private final CommandFabric commandFabric;
+    private final CommandFactory commandFactory;
     private final Identificator identificator;
     private Set<PrintWriter> clients;
     private ServerSocket connectionListener;
@@ -21,7 +21,7 @@ public class Server {
     public Server() {
         this.identificator = new Identificator();
         this.executorService = Executors.newCachedThreadPool();
-        this.commandFabric = new CommandFabric(this);
+        this.commandFactory = new CommandFactory(this);
         clients = new HashSet<>();
     }
 
@@ -80,7 +80,7 @@ public class Server {
         try {
             clients.add(socketOut);
             String readLine = socketIn.readLine();
-            Command command = commandFabric.createCommand(readLine);
+            Command command = commandFactory.createCommand(readLine);
             while (!("type:/close".equals(readLine)) && !(Thread.currentThread().isInterrupted())) {
                 readLine = LocalDateTime.now().toString() + " " + readLine;
                 System.out.println("debug: " + readLine);
