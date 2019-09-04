@@ -4,6 +4,7 @@ import com.razdolbai.server.Saver.SwitchingFileSaver;
 import org.junit.Test;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -15,7 +16,12 @@ public class SwitchingSaverTest {
 
     @Test
     public void shouldSaveAndNotSwitchIfLimitWasntReachedAndSameDate() throws IOException {
+
+
         LocalDateTime messagesDateTime = LocalDateTime.now();
+        File file = new File(SwitchingFileSaver.fileNameFormat("test", messagesDateTime, 0));
+        file.delete();
+
         SwitchingFileSaver sut = new SwitchingFileSaver("test", messagesDateTime, 1024);
 
 
