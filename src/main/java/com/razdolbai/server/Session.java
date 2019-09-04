@@ -5,4 +5,5 @@ public interface Session extends Runnable{
     void setUsername(String nickname);
     void run();
     void send(String message);
+    void close();
 }
