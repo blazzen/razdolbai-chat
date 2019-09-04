@@ -1,6 +1,5 @@
 package com.razdolbai.server.saver;
 
-import com.razdolbai.server.Saver.SwitchingFileSaver;
 import org.junit.Test;
 
 import java.io.BufferedReader;
@@ -22,7 +21,7 @@ public class SwitchingSaverTest {
         File file = new File(SwitchingFileSaver.fileNameFormat("test", messagesDateTime, 0));
         file.delete();
 
-        SwitchingFileSaver sut = new SwitchingFileSaver("test", messagesDateTime, 1024);
+        SwitchingFileSaver sut = new SwitchingFileSaver();
 
 
 

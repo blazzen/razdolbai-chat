@@ -1,29 +1,40 @@
-package com.razdolbai.server.Saver;
+package com.razdolbai.server.saver;
+
+import com.sun.xml.internal.bind.annotation.XmlLocation;
 
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.time.LocalDateTime;
 
 public class FileSaver implements Saver {
-
-    protected String filename = "";
-
-    protected PrintWriter out;
-    protected boolean isClosed = false;
-
-    public FileSaver (String filename) throws IOException {
-        this.filename = filename;
-        open();
+    class FileExistsException extends RuntimeException {
+        FileExistsException() {
+            super();
+        }
     }
 
 
-    protected void open() throws  IOException{
+    String filename;
+
+    private PrintWriter out;
+    private boolean isClosed = false;
+
+
+    public FileSaver (String filename) throws IOException {
+        open(filename);
+    }
+
+
+    protected void open(String filename) throws  FileExistsException, IOException {
+        this.filename = filename;
+        File file = new File(filename);
+        if(file.exists()) {
+            throw new FileExistsException();
+        }
+
         out = new PrintWriter(
                 new OutputStreamWriter(
                         new BufferedOutputStream(
                                 new FileOutputStream(filename, true))));
-
     }
 
     @Override
@@ -32,12 +43,11 @@ public class FileSaver implements Saver {
         out.flush();
     }
 
+    @Override
     public synchronized void close() {
         if (isClosed) return;
-
         isClosed = true;
 
-        out.flush();
         out.close();
     }
 }
