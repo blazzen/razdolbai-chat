@@ -1,6 +1,5 @@
 package com.razdolbai.server.saver;
 
-import com.sun.xml.internal.bind.annotation.XmlLocation;
 
 import java.io.*;
 import java.time.LocalDateTime;
@@ -16,8 +15,8 @@ public class FileSaver implements Saver {
     private volatile boolean isClosed = false;
 
 
-    public FileSaver (String filename) throws IOException {
-        open(filename);
+    public FileSaver () {
+
     }
 
 

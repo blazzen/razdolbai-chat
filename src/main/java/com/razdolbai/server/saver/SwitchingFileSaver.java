@@ -18,10 +18,9 @@ public class SwitchingFileSaver extends FileSaver {
     private LocalDateTime dateTime;
 
     public SwitchingFileSaver() throws IOException {
-        super(fileNameFormat(name, null,  0 ));
+        dateTime = LocalDateTime.now();
+        this.open(dateTime);
         this.sizeLimit = 2 * 150 * 2097152;
-
-        this.dateTime = LocalDateTime.now();
     }
 
     public static String fileNameFormat(String name, LocalDateTime dateTime, int fileCounter) {
