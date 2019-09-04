@@ -17,6 +17,11 @@ public class SwitchingFileSaver extends FileSaver {
 
     private LocalDateTime dateTime;
 
+    public SwitchingFileSaver(int sizeLimit) {
+        this.sizeLimit = sizeLimit;
+    }
+
+
     public SwitchingFileSaver() throws IOException {
         dateTime = LocalDateTime.now();
         this.open(dateTime);
@@ -24,10 +29,6 @@ public class SwitchingFileSaver extends FileSaver {
     }
 
     public static String fileNameFormat(String name, LocalDateTime dateTime, int fileCounter) {
-        if(dateTime == null) {
-            dateTime = LocalDateTime.now();
-        }
-
         return "./resources/History/" + name + "_"
                 + dateTime.getDayOfMonth() + "_"
                 + dateTime.getMonth() + "_"
