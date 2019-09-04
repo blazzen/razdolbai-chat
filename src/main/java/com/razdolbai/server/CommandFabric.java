@@ -48,6 +48,7 @@ public class CommandFabric {
     }
 
     private IdentificationCommand createIdentificationCommand(Map<String, String> fieldMap) {
-        return new IdentificationCommand(server.identificator, nickname);
+        String nickname = fieldMap.get("msg");
+        return new IdentificationCommand(server.getIdentificator(), nickname);
     }
 }
