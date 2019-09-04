@@ -8,7 +8,7 @@ import java.util.Set;
 public class Identificator {
     private Set<String> nicknames = new HashSet<String>(1500);
 
-    public synchronized void changeNickname(String oldNickname, String newNickname) {
+    public synchronized void changeNickname(String oldNickname, String newNickname) throws OccupiedNicknameException {
         if (nicknames.contains(newNickname)) {
             throw new OccupiedNicknameException();
         }

@@ -2,6 +2,7 @@ package com.razdolbai.server.commands;
 
 import com.razdolbai.server.Identificator;
 import com.razdolbai.server.Session;
+import com.razdolbai.server.exceptions.OccupiedNicknameException;
 
 public class IdentificationCommand implements Command {
     private final Session session;
@@ -15,7 +16,7 @@ public class IdentificationCommand implements Command {
     }
 
     @Override
-    public void execute() {
+    public void execute() throws OccupiedNicknameException {
         String oldNickname = session.getUsername();
         identificator.changeNickname(oldNickname, newNickname);
     }
