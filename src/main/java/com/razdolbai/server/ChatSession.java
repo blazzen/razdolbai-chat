@@ -4,7 +4,6 @@ import com.razdolbai.server.commands.CloseCommand;
 import com.razdolbai.server.commands.Command;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.time.LocalDateTime;
@@ -17,7 +16,7 @@ public class ChatSession implements Session{
     private PrintWriter socketOut;
     private CommandFactory commandFactory;
 
-    public ChatSession(String username, Socket socket, BufferedReader socketIn, PrintWriter socketOut, CommandFactory commandFactory) {
+    ChatSession(String username, Socket socket, BufferedReader socketIn, PrintWriter socketOut, CommandFactory commandFactory) {
         this.username = username;
         this.socket = socket;
         this.socketIn = socketIn;
@@ -38,14 +37,13 @@ public class ChatSession implements Session{
                 command.execute(); // command --> session.send(msg)
                 System.out.printf("Debug: %s %s %s" + System.lineSeparator(), username, timeStamp, message);
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
-        } catch (Exception e) {// TODO: 2019-09-04 add catch for NotAuthorizedException
-            e.printStackTrace();
-        }
+        }// TODO: 2019-09-04 add catch for NotAuthorizedException
+
     }
 
-    void send(String message) {
+    public void send(String message) {
         socketOut.println(message);
         socketOut.flush();
     }
