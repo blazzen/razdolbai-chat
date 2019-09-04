@@ -14,7 +14,7 @@ public class Server {
         this.sessionStore = sessionStore;
     }
 
-    private void startServer() {
+    void startServer() {
         try {
             connectionListener = new ServerSocket(8081);
             registerShutdownHook();

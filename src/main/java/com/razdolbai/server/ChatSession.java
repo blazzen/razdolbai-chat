@@ -27,21 +27,19 @@ public class ChatSession implements Session {
 
     @Override
     public void run() {
-        try (Socket mySocket = socket;
-             final PrintWriter mySocketOut = socketOut;
-             final BufferedReader mySocketIn = socketIn) {
+        try {
             Command command = null;
             while (!(command instanceof CloseCommand)) {
-                String message = mySocketIn.readLine();
+                String message = socketIn.readLine();
                 String timeStamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
                 command = commandFactory.createCommand(this, message, timeStamp);
                 command.execute(); // command --> session.send(msg)
                 System.out.printf("Debug: %s %s %s" + System.lineSeparator(), username, timeStamp, message);
             }
+            close();
         } catch (Exception e) {
             e.printStackTrace();
         }// TODO: 2019-09-04 add catch for NotAuthorizedException
-
     }
 
     @Override
@@ -78,5 +76,4 @@ public class ChatSession implements Session {
     public void setUsername(String username) {
         this.username = username;
     }
-
 }
