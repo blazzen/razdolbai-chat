@@ -13,6 +13,7 @@ public class Server {
     private final ExecutorService executorService;
     private final Parser parser;
     private Set<PrintWriter> clients;
+    private ServerSocket connectionListener;
 
     public Server() {
         this.executorService = Executors.newCachedThreadPool();
@@ -21,9 +22,8 @@ public class Server {
     }
 
     private void startServer() {
-        try (
-                final ServerSocket connectionListener = new ServerSocket(8081);
-        ) {
+        try {
+            connectionListener = new ServerSocket(8081);
             registerShutdownHook(executorService);
             while (true) {
                 startConnection(connectionListener);
@@ -36,6 +36,14 @@ public class Server {
     private void registerShutdownHook(ExecutorService executorService) {
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             executorService.shutdown();
+            if (connectionListener != null) {
+                try {
+                    connectionListener.close();
+                    clients.forEach(PrintWriter::close);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
             System.out.println("Server closed");
         }));
     }
@@ -84,7 +92,6 @@ public class Server {
     }
 
     private void sendToAllClients(String msg) {
-
         clients.forEach(printWriter -> {
             printWriter.println(msg);
             printWriter.flush();
