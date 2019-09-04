@@ -3,11 +3,10 @@ package com.razdolbai.server.reader;
 import java.io.File;
 import java.util.List;
 
-public class FileSwitchingReader implements Reader{
+public class FileSwitchingReader implements Reader {
 
     @Override
     public List<String> getHistory() {
-
 
 
         return null;

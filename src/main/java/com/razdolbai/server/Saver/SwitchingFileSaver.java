@@ -17,10 +17,14 @@ public class SwitchingFileSaver extends FileSaver {
 
     private LocalDateTime dateTime;
 
-    public SwitchingFileSaver() throws IOException {
-        super(fileNameFormat(name, null,  0 ));
-        this.sizeLimit = 2 * 150 * 2097152;
+    public SwitchingFileSaver(int sizeLimit) throws IOException {
+        this.sizeLimit = sizeLimit;
+        this.dateTime = LocalDateTime.now();
+    }
 
+
+    public SwitchingFileSaver() throws IOException {
+        this.sizeLimit = 2 * 150 * 2097152;
         this.dateTime = LocalDateTime.now();
     }
 
@@ -51,7 +55,6 @@ public class SwitchingFileSaver extends FileSaver {
         this.dateTime = dateTime;
     }
 
-
     private void open(LocalDateTime dateTime) throws IOException {
         boolean opened = false;
         while(!opened) {
@@ -64,6 +67,7 @@ public class SwitchingFileSaver extends FileSaver {
             opened = true;
         }
     }
+
 
     private void switchFile(LocalDateTime dateTime) throws IOException {
         super.close();
