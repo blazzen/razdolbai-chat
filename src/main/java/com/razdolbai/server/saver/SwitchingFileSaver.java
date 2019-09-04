@@ -38,14 +38,14 @@ public class SwitchingFileSaver extends FileSaver {
 
     @Override
     public synchronized void save(String string, LocalDateTime dateTime) throws IOException {
-        sizeCounter += string.getBytes().length;
-
         if (sizeCounter > sizeLimit ||
                 this.dateTime.getDayOfYear() != dateTime.getDayOfYear() ||
                 this.dateTime.getYear() != dateTime.getYear()) {
             sizeCounter = 0;
             switchFile(dateTime);
         }
+
+        sizeCounter += string.getBytes().length;
 
         super.save(string, dateTime);
         this.dateTime = dateTime;
