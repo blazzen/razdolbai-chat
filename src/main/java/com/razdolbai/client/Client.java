@@ -17,25 +17,11 @@ public class Client{
                                     new BufferedInputStream(socket.getInputStream())))
             ) {
                 Proxy proxy = new Proxy(out);
-
-                while (true) {
-                    BufferedReader reader =
-                            new BufferedReader(new InputStreamReader(System.in));
-                    String input = reader.readLine();
-                    InputParser parser = new InputParser();
-                    Command command = parser.parse(input);
-                    proxy.send(command);
-
-                }
-
-
-
+                InputConsole.readCommand(proxy);
 
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
-
 
         }
         catch (Exception e){
@@ -49,4 +35,18 @@ public class Client{
     private static void createNewConnection() {
 
     }
+}
+
+class InputConsole {
+    static void readCommand(Proxy proxy) throws IOException {
+        while(true) {
+            BufferedReader reader =
+                    new BufferedReader(new InputStreamReader(System.in));
+            String input = reader.readLine();
+            InputParser parser = new InputParser();
+            Command command = parser.parse(input);
+            proxy.send(command);
+        }
+    }
+
 }

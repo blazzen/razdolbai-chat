@@ -20,5 +20,6 @@ class Proxy {
         }
 
         out.println(result);
+        out.flush();
     }
 }
