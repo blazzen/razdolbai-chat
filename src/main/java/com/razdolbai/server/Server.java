@@ -18,10 +18,10 @@ public class Server {
     private Set<PrintWriter> clients;
     private ServerSocket connectionListener;
 
-    public Server() {
+    public Server(CommandFactory commandFactory) {
+        this.commandFactory = commandFactory;
         this.identificator = new Identificator();
         this.executorService = Executors.newCachedThreadPool();
-        this.commandFactory = new CommandFactory(this);
         clients = new HashSet<>();
     }
 
@@ -80,7 +80,6 @@ public class Server {
         try {
             clients.add(socketOut);
             String readLine = socketIn.readLine();
-            Command command = commandFactory.createCommand(readLine);
             while (!("type:/close".equals(readLine)) && !(Thread.currentThread().isInterrupted())) {
                 readLine = LocalDateTime.now().toString() + " " + readLine;
                 System.out.println("debug: " + readLine);
@@ -107,7 +106,4 @@ public class Server {
         });
     }
 
-    public static void main(String[] args) {
-        new Server().startServer();
-    }
 }

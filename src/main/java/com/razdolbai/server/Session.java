@@ -1,7 +1,6 @@
 package com.razdolbai.server;
 
-public interface Session {
+public interface Session extends Runnable{
     String getUsername();
     void run();
-    void stop();
 }
