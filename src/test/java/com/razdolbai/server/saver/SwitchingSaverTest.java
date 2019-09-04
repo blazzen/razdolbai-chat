@@ -35,6 +35,7 @@ public class SwitchingSaverTest {
 
         String filename = SwitchingFileSaver.fileNameFormat("history", messageDateTime,0);
 
+
         BufferedReader reader = new BufferedReader(new FileReader(filename));
 
         assertThat(reader.readLine().equals("[" + messageDateTime.toString() + "]" + "test1")).isTrue();
