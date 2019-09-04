@@ -13,14 +13,14 @@ public class SwitchingFileSaver extends FileSaver {
     private LocalDateTime dateTime;
 
 
-    public SwitchingFileSaver(String name, LocalDateTime dateTime, int sizeLimit, boolean append) throws IOException {
-        super(fileNameFormat(name, dateTime, 0), append);
+    public SwitchingFileSaver(String name, LocalDateTime dateTime, int sizeLimit) throws IOException {
+        super(fileNameFormat(name, dateTime, 0));
         this.sizeLimit = sizeLimit;
         this.name = name;
         this.dateTime = dateTime;
     }
 
-    private static String fileNameFormat(String name, LocalDateTime dateTime, int fileCounter) {
+    public static String fileNameFormat(String name, LocalDateTime dateTime, int fileCounter) {
         return name + "_"
                 + dateTime.getDayOfMonth() + "_"
                 + dateTime.getMonth() + "_"
@@ -32,12 +32,14 @@ public class SwitchingFileSaver extends FileSaver {
     public synchronized void save(String string, LocalDateTime dateTime) throws IOException {
         sizeCounter += string.length();
 
-        if (sizeCounter > sizeLimit) {
+        if (sizeCounter > sizeLimit || this.dateTime.getDayOfYear() != dateTime.getDayOfYear()) {
             sizeCounter = 0;
             switchFile();
         }
 
         super.save(string, dateTime);
+
+        this.dateTime = dateTime;
     }
 
     private void switchFile() throws IOException {

@@ -12,7 +12,7 @@ public class FileSaver implements Saver {
     protected PrintWriter out;
     protected boolean isClosed = false;
 
-    public FileSaver (String filename, boolean append) throws IOException {
+    public FileSaver (String filename) throws IOException {
         this.filename = filename;
         open();
     }
@@ -28,7 +28,7 @@ public class FileSaver implements Saver {
 
     @Override
     public synchronized void save(String string, LocalDateTime dateTime) throws IOException{
-        out.println(string);
+        out.println("[" + dateTime.toString() + "]" + string);
         out.flush();
     }
 
