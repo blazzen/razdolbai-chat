@@ -1,58 +1,6 @@
 package com.razdolbai.server;
 
-import com.razdolbai.server.commands.CloseCommand;
-import com.razdolbai.server.commands.Command;
-
-import java.io.*;
-import java.net.Socket;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-
-public class Session implements Runnable {
-    private String username;
-    private Socket socket;
-    private BufferedReader socketIn;
-    private PrintWriter socketOut;
-    private ICommandFactory commandFactory;
-
-    public Session(String username, Socket socket, BufferedReader socketIn, PrintWriter socketOut, ICommandFactory commandFactory) {
-        this.username = username;
-        this.socket = socket;
-        this.socketIn = socketIn;
-        this.socketOut = socketOut;
-        this.commandFactory = commandFactory;
-    }
-
-    @Override
-    public void run() {
-        try (Socket mySocket = socket;
-             final PrintWriter mySocketOut = socketOut;
-             final BufferedReader mySocketIn = socketIn) {
-            Command command = null;
-            while (!(command instanceof CloseCommand)) {
-                String message = mySocketIn.readLine();
-                String timeStamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-                command = commandFactory.getCommand(this, message, timeStamp);
-                command.execute(); // command --> session.send(msg)
-                System.out.printf("Debug: %s %s %s" + System.lineSeparator(), username, timeStamp, message);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } // TODO: 2019-09-04 add catch for NotAuthorizedException
-    }
-
-    void send(String message) {
-        socketOut.println(message);
-        socketOut.flush();
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    // will be set by ChIdCommand
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
+public interface Session extends Runnable{
+    String getUsername();
+    void run();
 }

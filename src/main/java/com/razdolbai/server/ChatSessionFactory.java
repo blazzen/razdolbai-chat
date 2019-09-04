@@ -3,15 +3,15 @@ package com.razdolbai.server;
 import java.io.*;
 import java.net.Socket;
 
-public class ChatSessionFactory implements ISessionFactory {
-    private ICommandFactory commandFactory;
+public class ChatSessionFactory implements SessionFactory {
+    private CommandFactory commandFactory;
 
-    public ChatSessionFactory(ICommandFactory commandFactory) {
+    public ChatSessionFactory(CommandFactory commandFactory) {
         this.commandFactory = commandFactory;
     }
 
     @Override
-    public Session createSession(Socket socket) {
+    public Session createSession(Socket socket) throws IOException {
         final BufferedReader in = new BufferedReader(
                 new InputStreamReader(
                         new BufferedInputStream(
@@ -20,6 +20,6 @@ public class ChatSessionFactory implements ISessionFactory {
                 new OutputStreamWriter(
                         new BufferedOutputStream(
                                 socket.getOutputStream())));
-        return new Session(null, socket, in, out, commandFactory);
+        return new ChatSession(null, socket, in, out, commandFactory);
     }
 }
