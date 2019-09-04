@@ -20,13 +20,10 @@ public class Server {
     private void startServer() {
         try (
                 final ServerSocket connectionListener = new ServerSocket(8081);
-                PrintWriter historyWriter = new PrintWriter(
-                        new OutputStreamWriter(
-                        new BufferedOutputStream(new FileOutputStream("fin.txt"))))
         ) {
             registerShutdownHook(executorService);
             while (true) {
-                startConnection(connectionListener, historyWriter);
+                startConnection(connectionListener);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -40,36 +37,31 @@ public class Server {
         }));
     }
 
-    private void startConnection(ServerSocket connectionListener, PrintWriter historyWriter) throws IOException {
+    private void startConnection(ServerSocket connectionListener) throws IOException {
         Socket socket = connectionListener.accept();
         executorService.execute(() -> {
-            try (final PrintWriter out = new PrintWriter(
+            try (Socket mysocket = socket;
+                    final PrintWriter out = new PrintWriter(
                     new OutputStreamWriter(
                             new BufferedOutputStream(
-                                    socket.getOutputStream())));
+                                    mysocket.getOutputStream())));
                  final BufferedReader in = new BufferedReader(
                          new InputStreamReader(
                                  new BufferedInputStream(
-                                         socket.getInputStream())))) {
-                processClient(in, out, historyWriter);
+                                         mysocket.getInputStream())))) {
+                processClient(in, out);
             } catch (IOException e) {
                 e.printStackTrace();
-            } finally {
-                try {
-                    socket.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
             }
         });
     }
 
 
-    private void processClient(BufferedReader socketIn, PrintWriter socketOut, PrintWriter historyWriter) {
+    private void processClient(BufferedReader socketIn, PrintWriter socketOut) {
         try {
             String readLine = socketIn.readLine();
             Command command = parser.parse(readLine);
-            while (!("type:close".equals(readLine))) {
+            while (!("type:/close".equals(readLine)) && !(Thread.currentThread().isInterrupted())) {
                 System.out.println("debug: " + readLine);
                 socketOut.println(readLine);
                 readLine = socketIn.readLine();
@@ -85,9 +77,6 @@ public class Server {
         }
     }
 
-    private void saveToFile() {
-
-    }
 
     public static void main(String[] args) {
         new Server().startServer();

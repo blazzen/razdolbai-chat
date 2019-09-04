@@ -16,6 +16,9 @@ class Parser {
             case "/snd": {
                 return parseSendMessage(fields);
             }
+            case "/close":{
+
+            }
             default: {
                 throw new IllegalArgumentException("Unknown command type: " + type);
             }
