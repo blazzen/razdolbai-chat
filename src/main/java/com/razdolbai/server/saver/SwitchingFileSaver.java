@@ -17,11 +17,6 @@ public class SwitchingFileSaver extends FileSaver {
 
     private LocalDateTime dateTime;
 
-    public SwitchingFileSaver(int sizeLimit) {
-        this.sizeLimit = sizeLimit;
-    }
-
-
     public SwitchingFileSaver() throws IOException {
         dateTime = LocalDateTime.now();
         this.open(dateTime);
