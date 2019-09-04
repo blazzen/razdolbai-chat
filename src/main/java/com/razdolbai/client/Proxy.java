@@ -1,5 +1,6 @@
 package com.razdolbai.client;
 
+
 import java.io.PrintWriter;
 
 class Proxy {
@@ -13,13 +14,17 @@ class Proxy {
     void send(Command command){
 
         String result = "type:" + command.getCommandType();
-        if (!command.getMessage().isEmpty())
-        {
-            result+= DELIMITER;
-            result += "msg:" + command.getMessage();
+        if (!command.getMessage().isEmpty()) {
+            result = addMessage(command, result);
         }
 
         out.println(result);
         out.flush();
+    }
+
+    private String addMessage(Command command, String result) {
+        result+= DELIMITER;
+        result += "msg:" + command.getMessage();
+        return result;
     }
 }

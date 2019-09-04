@@ -26,6 +26,7 @@ class InputParser {
 
 
 
+
         return new Command(commandType, message);
 
     }
