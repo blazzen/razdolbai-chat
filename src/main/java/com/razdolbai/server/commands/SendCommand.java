@@ -12,12 +12,14 @@ public class SendCommand implements Command {
     private final SessionStore sessionStore;
     private final String message;
     private final Saver saver;
+    private final String timestamp;
 
-    public SendCommand(Session session, SessionStore sessionStore, String message, Saver saver) {
+    public SendCommand(Session session, SessionStore sessionStore, String message, Saver saver, String timestamp) {
         this.session = session;
         this.sessionStore = sessionStore;
         this.message = message;
         this.saver = saver;
+        this.timestamp = timestamp;
     }
 
     @Override
@@ -29,7 +31,7 @@ public class SendCommand implements Command {
     }
 
     private String decorate(String message) {
-        return LocalDateTime.now().toString() + "\n" +
+        return timestamp + "\n" +
                 session.getUsername() + "\n" +
                 message + "\n";
     }
