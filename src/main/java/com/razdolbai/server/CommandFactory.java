@@ -4,11 +4,11 @@ import com.razdolbai.server.commands.*;
 
 import java.util.Map;
 
-public class CommandFabric {
+public class CommandFactory {
     private final Parser parser = new Parser("\0", ":");
     private final Server server;
 
-    public CommandFabric(Server server) {
+    public CommandFactory(Server server) {
         this.server = server;
     }
 
