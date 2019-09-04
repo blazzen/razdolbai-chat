@@ -1,10 +1,10 @@
-package com.razdolbai.server.Saver;
+package com.razdolbai.server.saver;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
 
-public interface Saver {
-    void save(String string, LocalDateTime dateTime) throws IOException;
+public interface Saver extends AutoCloseable{
+    void save(String message, LocalDateTime dateTime) throws IOException;
 
     void close();
 

@@ -22,25 +22,38 @@ public class SwitchingSaverTest {
     }
 
     @Test
-    public void shouldSaveAndNotSwitchIfLimitWasntReachedAndSameDate() throws IOException {
+    public void shouldSaveAndNotSwitchIfLimitWasNotReachedAndSameDate() throws IOException {
 
         File file = new File(SwitchingFileSaver.fileNameFormat("history", messageDateTime, 0));
         file.delete();
 
         SwitchingFileSaver sut = new SwitchingFileSaver();
 
-        sut.save("hi", messageDateTime);
-        sut.save("hello", messageDateTime);
+        sut.save("test1", messageDateTime);
+        sut.save("test2", messageDateTime);
         sut.close();
 
         String filename = SwitchingFileSaver.fileNameFormat("history", messageDateTime,0);
 
         BufferedReader reader = new BufferedReader(new FileReader(filename));
 
-        assertThat(reader.readLine().equals("[" + messageDateTime.toString() + "]" + "hi")).isTrue();
-        assertThat(reader.readLine().equals("[" + messageDateTime.toString() + "]" + "hello")).isTrue();
+        assertThat(reader.readLine().equals("[" + messageDateTime.toString() + "]" + "test1")).isTrue();
+        assertThat(reader.readLine().equals("[" + messageDateTime.toString() + "]" + "test2")).isTrue();
 
     }
 
+    @Test
+    public void shouldCreateNewFileIfFileAlreadyExists() throws IOException {
+        File existedFile = new File(SwitchingFileSaver.fileNameFormat("history", messageDateTime, 0));
+        existedFile.createNewFile();
 
+        SwitchingFileSaver sut = new SwitchingFileSaver();
+        sut.save("test1", messageDateTime);
+        sut.close();
+
+        String createdFileName = SwitchingFileSaver.fileNameFormat("history", messageDateTime,1);
+        BufferedReader reader = new BufferedReader(new FileReader(createdFileName));
+
+        assertThat(reader.readLine().equals("[" + messageDateTime.toString() + "]" + "test1")).isTrue();
+    }
 }

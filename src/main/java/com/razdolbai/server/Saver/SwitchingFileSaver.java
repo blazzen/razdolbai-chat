@@ -1,27 +1,35 @@
-package com.razdolbai.server.Saver;
+package com.razdolbai.server.saver;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
 
+
+/**
+ * File Saver which switches file on date changing or limit exceeding
+ * File size limit - 2^21 messages in 2-byte encoding 150 symbols per each
+ */
 public class SwitchingFileSaver extends FileSaver {
     private final int sizeLimit;
     private int sizeCounter = 0;
     private int fileCounter = 0;
-    private String name;
+    private final static String name = "history";
     private final static String format = ".txt";
 
     private LocalDateTime dateTime;
 
+    public SwitchingFileSaver() throws IOException {
+        super(fileNameFormat(name, null,  0 ));
+        this.sizeLimit = 2 * 150 * 2097152;
 
-    public SwitchingFileSaver(String name, LocalDateTime dateTime, int sizeLimit) throws IOException {
-        super(fileNameFormat(name, dateTime, 0));
-        this.sizeLimit = sizeLimit;
-        this.name = name;
-        this.dateTime = dateTime;
+        this.dateTime = LocalDateTime.now();
     }
 
     public static String fileNameFormat(String name, LocalDateTime dateTime, int fileCounter) {
-        return name + "_"
+        if(dateTime == null) {
+            dateTime = LocalDateTime.now();
+        }
+
+        return "./resources/History/" + name + "_"
                 + dateTime.getDayOfMonth() + "_"
                 + dateTime.getMonth() + "_"
                 + dateTime.getYear() + "_" +
@@ -30,22 +38,38 @@ public class SwitchingFileSaver extends FileSaver {
 
     @Override
     public synchronized void save(String string, LocalDateTime dateTime) throws IOException {
-        sizeCounter += string.length();
+        sizeCounter += string.getBytes().length;
 
-        if (sizeCounter > sizeLimit || this.dateTime.getDayOfYear() != dateTime.getDayOfYear()) {
+        if (sizeCounter > sizeLimit ||
+                this.dateTime.getDayOfYear() != dateTime.getDayOfYear() ||
+                this.dateTime.getYear() != dateTime.getYear()) {
             sizeCounter = 0;
-            switchFile();
+            switchFile(dateTime);
         }
 
         super.save(string, dateTime);
-
         this.dateTime = dateTime;
     }
 
-    private void switchFile() throws IOException {
+
+    private void open(LocalDateTime dateTime) throws IOException {
+        boolean opened = false;
+        while(!opened) {
+            try {
+                super.open(fileNameFormat(name, dateTime, fileCounter));
+            } catch (FileExistsException e) {
+                fileCounter++;
+                continue;
+            }
+            opened = true;
+        }
+    }
+
+    private void switchFile(LocalDateTime dateTime) throws IOException {
         super.close();
         fileCounter++;
-        super.filename = fileNameFormat(name, dateTime, fileCounter);
-        super.open();
+        this.open(dateTime);
     }
+
+
 }
