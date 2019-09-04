@@ -17,18 +17,20 @@ public class SwitchingFileSaver extends FileSaver {
 
     private LocalDateTime dateTime;
 
-    public SwitchingFileSaver() throws IOException {
-        super(fileNameFormat(name, null,  0 ));
-        this.sizeLimit = 2 * 150 * 2097152;
+    public SwitchingFileSaver(int sizeLimit) throws IOException {
+        dateTime = LocalDateTime.now();
+        this.open(dateTime);
+        this.sizeLimit = sizeLimit;
+    }
 
-        this.dateTime = LocalDateTime.now();
+
+    public SwitchingFileSaver() throws IOException {
+        dateTime = LocalDateTime.now();
+        this.open(dateTime);
+        this.sizeLimit = 2 * 150 * 2097152;
     }
 
     public static String fileNameFormat(String name, LocalDateTime dateTime, int fileCounter) {
-        if(dateTime == null) {
-            dateTime = LocalDateTime.now();
-        }
-
         return "./resources/History/" + name + "_"
                 + dateTime.getDayOfMonth() + "_"
                 + dateTime.getMonth() + "_"
@@ -38,14 +40,14 @@ public class SwitchingFileSaver extends FileSaver {
 
     @Override
     public synchronized void save(String string, LocalDateTime dateTime) throws IOException {
-        sizeCounter += string.getBytes().length;
-
         if (sizeCounter > sizeLimit ||
                 this.dateTime.getDayOfYear() != dateTime.getDayOfYear() ||
                 this.dateTime.getYear() != dateTime.getYear()) {
             sizeCounter = 0;
             switchFile(dateTime);
         }
+
+        sizeCounter += string.getBytes().length;
 
         super.save(string, dateTime);
         this.dateTime = dateTime;

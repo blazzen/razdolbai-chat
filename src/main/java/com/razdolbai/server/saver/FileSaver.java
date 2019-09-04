@@ -21,7 +21,7 @@ public class FileSaver implements Saver {
 
 
     protected void open(String filename) throws  FileExistsException, IOException {
-
+        this.isClosed = false;
         File file = new File(filename);
         if(file.exists()) {
             throw new FileExistsException();
