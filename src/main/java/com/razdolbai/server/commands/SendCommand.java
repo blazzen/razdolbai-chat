@@ -1,13 +1,15 @@
 package com.razdolbai.server.commands;
 
+import com.razdolbai.server.Session;
+
 public class SendCommand implements Command {
+    private final Session session;
     private final String message;
 
-    public SendCommand(String message) {
+    public SendCommand(Session session, String message) {
+        this.session = session;
         this.message = message;
     }
-
-    public String getMessage() {return message;}
 
     @Override
     public void execute() {
