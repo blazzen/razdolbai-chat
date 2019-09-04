@@ -10,10 +10,10 @@ class Parser {
         String[] fields = message.split(FIELD_DELIMITER);
         String type = getType(fields[0]);
         switch (type) {
-            case "hist": {
+            case "/hist": {
                 return parseHistMessage(fields);
             }
-            case "snd": {
+            case "/snd": {
                 return parseSendMessage(fields);
             }
             default: {
