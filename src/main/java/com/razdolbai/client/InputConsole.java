@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 class InputConsole {
     private Proxy proxy;
 
+
     InputConsole(Proxy proxy) {
         this.proxy = proxy;
     }
@@ -25,8 +26,9 @@ class InputConsole {
             if (command != null) {
                 proxy.send(command);
             }
-        }
 
+
+        }
 
     }
 

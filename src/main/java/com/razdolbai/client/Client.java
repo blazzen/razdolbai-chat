@@ -6,7 +6,7 @@ import java.net.Socket;
 public class Client {
     public static void main(String[] args) {
 
-        String[] existingCommands = {"/snd", "/hist", "/chid"};
+        String[] existingCommands = {"/snd", "/hist", "/chid", "/close"};
 
         try (
                 final Socket socket = new Socket("localhost", 666);
@@ -19,7 +19,10 @@ public class Client {
         ) {
             Proxy proxy = new Proxy(out);
             InputConsole inputConsole = new InputConsole(proxy);
+
+
             inputConsole.readCommand(existingCommands);
+
 
         } catch (IOException e) {
             e.printStackTrace();

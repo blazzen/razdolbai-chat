@@ -7,6 +7,8 @@ class Proxy {
     private static final String DELIMITER = "\0";
     private PrintWriter out;
 
+    private static final String CLOSE = "/close";
+
     Proxy(PrintWriter out) {
         this.out = out;
     }
@@ -20,6 +22,10 @@ class Proxy {
 
         out.println(result);
         out.flush();
+
+        if (command.getCommandType().equals(CLOSE)) {
+            System.exit(1);
+        }
     }
 
     private String addMessage(Command command, String result) {
