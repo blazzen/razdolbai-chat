@@ -4,7 +4,7 @@ import com.razdolbai.server.commands.*;
 
 import java.util.Map;
 
-public class ChatCommandFactory {
+public class ChatCommandFactory implements CommandFactory {
     private final Parser parser;
     private final SessionStore sessionStore;
     private final Saver saver;
@@ -20,7 +20,8 @@ public class ChatCommandFactory {
         this.identificator = identificator;
     }
 
-    public Command createCommand(Session session, String message) {
+    @Override
+    public Command createCommand(Session session, String message, String timeStamp) {
         Map<String, String> fieldMap = parser.parse(message);
         String type = fieldMap.get("type");
         switch (type) {
