@@ -4,6 +4,7 @@ import com.razdolbai.server.commands.*;
 
 import java.util.Map;
 
+// TODO: Move to package 'commands'
 public class CommandFactory {
     private final Parser parser;
     private final SessionStore sessionStore;
@@ -47,7 +48,7 @@ public class CommandFactory {
     }
 
     private Command createCloseCommand(Session session) {
-        return new CloseCommand(session);
+        return new CloseCommand(session, sessionStore);
     }
 
     private SendCommand createSendCommand(Session session, Map<String, String> fieldMap) {
