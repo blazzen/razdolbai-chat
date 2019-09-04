@@ -10,11 +10,17 @@ import java.util.concurrent.Executors;
 
 public class Server {
     private final ExecutorService executorService;
-    private final Parser parser;
+    private final CommandFabric commandFabric;
+    private final Identificator identificator;
 
     public Server() {
+        this.identificator = new Identificator();
         this.executorService = Executors.newCachedThreadPool();
-        parser = new Parser();
+        this.commandFabric = new CommandFabric(this);
+    }
+
+    public Identificator getIdentificator() {
+        return identificator;
     }
 
     private void startServer() {
@@ -60,7 +66,7 @@ public class Server {
     private void processClient(BufferedReader socketIn, PrintWriter socketOut) {
         try {
             String readLine = socketIn.readLine();
-            Command command = parser.parse(readLine);
+            Command command = commandFabric.createCommand(readLine);
             while (!("type:/close".equals(readLine)) && !(Thread.currentThread().isInterrupted())) {
                 System.out.println("debug: " + readLine);
                 socketOut.println(readLine);
