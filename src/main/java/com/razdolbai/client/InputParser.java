@@ -1,6 +1,14 @@
 package com.razdolbai.client;
 
+import java.util.Arrays;
+
 class InputParser {
+    private String[] existingCommands;
+
+    InputParser(String[] existingCommands) {
+        this.existingCommands = existingCommands;
+    }
+
     Command parse(String input) {
         String message = "";
         String commandType;
@@ -10,6 +18,12 @@ class InputParser {
         } else {
             commandType = input;
         }
+
+        if (!Arrays.asList(existingCommands).contains(commandType)){
+            System.out.println("Unknown command, try again");
+            return null;
+        }
+
 
 
         return new Command(commandType, message);

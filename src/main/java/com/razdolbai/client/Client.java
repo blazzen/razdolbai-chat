@@ -5,6 +5,8 @@ import java.net.Socket;
 
 public class Client{
     public static void main(String[] args) {
+
+        String[] existingCommands = {"/snd", "/hist", "/chid"};
         try {
 
             try (
@@ -18,18 +20,20 @@ public class Client{
             ) {
                 Proxy proxy = new Proxy(out);
 
+                BufferedReader reader =
+                        new BufferedReader(new InputStreamReader(System.in));
+
+
                 while (true) {
-                    BufferedReader reader =
-                            new BufferedReader(new InputStreamReader(System.in));
+
                     String input = reader.readLine();
-                    InputParser parser = new InputParser();
+
+                    InputParser parser = new InputParser(existingCommands);
                     Command command = parser.parse(input);
-                    proxy.send(command);
-
+                    if (command!=null) {
+                        proxy.send(command);
+                    }
                 }
-
-
-
 
             } catch (IOException e) {
                 e.printStackTrace();
