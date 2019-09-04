@@ -8,4 +8,9 @@ public class SendCommand implements Command {
     }
 
     public String getMessage() {return message;}
+
+    @Override
+    public void execute() {
+
+    }
 }
