@@ -40,12 +40,12 @@ public class FileSaver implements Saver {
     @Override
     public synchronized void save(String string, LocalDateTime dateTime) throws IOException{
         out.println("[" + dateTime.toString() + "]" + string);
-        out.flush();
     }
 
     @Override
     public synchronized void close() {
         if (isClosed) return;
+
         isClosed = true;
 
         out.close();

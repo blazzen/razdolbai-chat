@@ -29,7 +29,7 @@ public class SwitchingFileSaver extends FileSaver {
             dateTime = LocalDateTime.now();
         }
 
-        return name + "_"
+        return "./resources/History/" + name + "_"
                 + dateTime.getDayOfMonth() + "_"
                 + dateTime.getMonth() + "_"
                 + dateTime.getYear() + "_" +
@@ -42,7 +42,7 @@ public class SwitchingFileSaver extends FileSaver {
 
         if (sizeCounter > sizeLimit ||
                 this.dateTime.getDayOfYear() != dateTime.getDayOfYear() ||
-                this.dateTime.getYear() == dateTime.getYear()) {
+                this.dateTime.getYear() != dateTime.getYear()) {
             sizeCounter = 0;
             switchFile();
         }
