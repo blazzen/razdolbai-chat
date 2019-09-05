@@ -33,7 +33,7 @@ public class Client {
                         new InputStreamReader(
                                 new BufferedInputStream(socket.getInputStream())));
                 final BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-                final ServerSocket connectionListener = new ServerSocket(666);
+                final ServerSocket connectionListener = new ServerSocket(Integer.parseInt(args[0]));
                 final Socket server = connectionListener.accept();
                 final PrintWriter consoleOutput = new PrintWriter(
                         new OutputStreamWriter(

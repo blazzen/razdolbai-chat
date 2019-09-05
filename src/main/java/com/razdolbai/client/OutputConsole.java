@@ -13,7 +13,7 @@ public class OutputConsole {
         logger.setLevel(Level.SEVERE);
 
         try (
-                final Socket socket = new Socket("localhost", 666);
+                final Socket socket = new Socket("localhost", Integer.parseInt(args[0]));
                 final BufferedReader in = new BufferedReader(
                         new InputStreamReader(
                                 new BufferedInputStream(socket.getInputStream())))
