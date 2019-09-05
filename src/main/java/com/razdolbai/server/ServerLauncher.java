@@ -15,6 +15,7 @@ public class ServerLauncher {
         HistoryAccessObject history = new HistoryAccessObject();
         CommandFactory commandFactory = new ChatCommandFactory(parser, sessionStore, saver, identificator, history);
         SessionFactory sessionFactory = new ChatSessionFactory(commandFactory);
+        System.out.println("Server starts");
         new Server(sessionFactory, sessionStore).startServer();
     }
 }

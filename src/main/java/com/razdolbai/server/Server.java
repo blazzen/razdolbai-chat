@@ -24,7 +24,6 @@ public class Server {
                 sessionStore.register(session);
             }
         } catch (IOException e) {
-            System.out.println("Error in creating session");
             e.printStackTrace();
         }
     }
@@ -40,6 +39,7 @@ public class Server {
                     e.printStackTrace();
                 }
             }
+            System.out.println("Server closed");
         }));
     }
 }

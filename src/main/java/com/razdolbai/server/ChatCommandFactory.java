@@ -60,6 +60,6 @@ public class ChatCommandFactory implements CommandFactory {
 
     private ChangeIdCommand createChangeIdCommand(Session session, Map<String, String> fieldMap, LocalDateTime timestamp) {
         String newNickname = fieldMap.get("msg");
-        return new ChangeIdCommand(session, identificator, newNickname, timestamp, sessionStore);
+        return new ChangeIdCommand(session, identificator, newNickname, timestamp, sessionStore, saver);
     }
 }

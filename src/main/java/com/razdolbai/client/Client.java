@@ -3,8 +3,10 @@ package com.razdolbai.client;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 
 
 public class Client {
@@ -17,7 +19,8 @@ public class Client {
     public static void main(String[] args) {
 
         Logger logger = Logger.getLogger("ClientLogger");
-        logger.setLevel(Level.SEVERE);
+        logger.setLevel(Level.INFO);
+
 
         try (
                 final Socket socket = new Socket("localhost", 8081);
@@ -28,7 +31,7 @@ public class Client {
                         new InputStreamReader(
                                 new BufferedInputStream(socket.getInputStream())));
                 final BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-                final ServerSocket connectionListener = new ServerSocket(666);
+                final ServerSocket connectionListener = new ServerSocket(Integer.parseInt(args[0]));
                 final Socket server = connectionListener.accept();
                 final PrintWriter consoleOutput = new PrintWriter(
                         new OutputStreamWriter(
@@ -36,33 +39,25 @@ public class Client {
                                         server.getOutputStream())))
         ) {
 
+            FileHandler handler = new FileHandler("client.log", true);
+            SimpleFormatter simple = new SimpleFormatter();
+            handler.setFormatter(simple);
+            logger.addHandler(handler);
+            logger.log(Level.INFO, "Client started");
 
-            System.out.println("Accepted");
-
-            Thread thread = new Thread(() -> {
-                try {
-                    while (true) {
-                        String inputData = in.readLine();
-                        if (inputData != null) {
-                            consoleOutput.println(inputData);
-                            consoleOutput.flush();
-                        }
-                    }
-                } catch (IOException e) {
-                    logger.log(Level.SEVERE, EXCEPTION_MESSAGE, e);
-                }
-            });
+            Thread thread = new Thread(() -> new OutputConsoleWriter(consoleOutput, in, logger).run());
 
             thread.start();
 
-
-            new ShutdownHookCreator().registerShutdownHook(socket, out, in, reader, logger);
             CommandSender commandSender = new CommandSender(out, new SystemExit());
             InputConsole inputConsole = new InputConsole(commandSender, reader, new InputParser(), logger);
 
             while (!Thread.currentThread().isInterrupted()) {
                 inputConsole.readCommand();
             }
+            consoleOutput.println("CLOSE");
+            consoleOutput.flush();
+            thread.interrupt();
 
         } catch (IOException e) {
             logger.log(Level.SEVERE, EXCEPTION_MESSAGE, e);

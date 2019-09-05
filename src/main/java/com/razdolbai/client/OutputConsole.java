@@ -13,16 +13,16 @@ public class OutputConsole {
         logger.setLevel(Level.SEVERE);
 
         try (
-                final Socket socket = new Socket("localhost", 666);
-                final PrintWriter out = new PrintWriter(
-                        new OutputStreamWriter(
-                                new BufferedOutputStream(socket.getOutputStream())));
+                final Socket socket = new Socket("localhost", Integer.parseInt(args[0]));
                 final BufferedReader in = new BufferedReader(
                         new InputStreamReader(
                                 new BufferedInputStream(socket.getInputStream())))
         ) {
-            while (true) {
+            while (!Thread.currentThread().isInterrupted()) {
                 String socketInput = in.readLine();
+                if ("CLOSE".equals(socketInput)) {
+                    Thread.currentThread().interrupt();
+                }
                 if (socketInput != null) {
                     System.out.println(socketInput);
                 }

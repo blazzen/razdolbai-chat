@@ -46,8 +46,8 @@ public class SwitchingSaverTest {
         sut.close();
 
         BufferedReader reader = new BufferedReader(new FileReader(filename));
-        assertThat(reader.readLine().equals("[" + messageDateTime.toString() + "]" + "test1")).isTrue();
-        assertThat(reader.readLine().equals("[" + messageDateTime.toString() + "]" + "test2")).isTrue();
+        assertThat(reader.readLine().equals("test1")).isTrue();
+        assertThat(reader.readLine().equals("test2")).isTrue();
         reader.close();
     }
 
@@ -64,7 +64,7 @@ public class SwitchingSaverTest {
         sut.close();
 
         BufferedReader reader = new BufferedReader(new FileReader(fileToBeCreated));
-        assertThat(reader.readLine().equals("[" + messageDateTime.toString() + "]" + "test1")).isTrue();
+        assertThat(reader.readLine().equals("test1")).isTrue();
         reader.close();
     }
 
@@ -82,8 +82,8 @@ public class SwitchingSaverTest {
         BufferedReader reader1 = new BufferedReader(new FileReader(firstFileToWrite));
         BufferedReader reader2 = new BufferedReader(new FileReader(secondFileToWrite));
 
-        assertThat(reader1.readLine().equals("[" + messageDateTime.toString() + "]" + "test1")).isTrue();
-        assertThat(reader2.readLine().equals("[" + messageDateTime.toString() + "]" + "test2")).isTrue();
+        assertThat(reader1.readLine().equals("test1")).isTrue();
+        assertThat(reader2.readLine().equals("test2")).isTrue();
 
         reader1.close();
         reader2.close();
@@ -103,8 +103,8 @@ public class SwitchingSaverTest {
         BufferedReader reader1 = new BufferedReader(new FileReader(firstFileToWrite));
         BufferedReader reader2 = new BufferedReader(new FileReader(secondFileToWrite));
 
-        assertThat(reader1.readLine().equals("[" + messageDateTime.toString() + "]" + "test1")).isTrue();
-        assertThat(reader2.readLine().equals("[" + messageDateTime.plusDays(1).toString() + "]" + "test2")).isTrue();
+        assertThat(reader1.readLine().equals("test1")).isTrue();
+        assertThat(reader2.readLine().equals("test2")).isTrue();
 
         reader1.close();
         reader2.close();
