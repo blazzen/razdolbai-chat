@@ -1,7 +1,6 @@
-package com.razdolbai.server.saver;
+package com.razdolbai.server.history.saver;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.BufferedReader;
@@ -30,7 +29,7 @@ public class SwitchingSaverTest {
         messageDateTime = LocalDateTime.now();
     }
 
-    @Test @Ignore
+    @Test
     public void shouldSaveAndNotSwitchIfLimitWasNotReachedAndSameDate() throws IOException {
         File file = new File(SwitchingFileSaver.fileNameFormat("history", messageDateTime, 0));
         file.delete();
@@ -52,7 +51,7 @@ public class SwitchingSaverTest {
 
     }
 
-    @Test @Ignore
+    @Test
     public void shouldCreateNewFileIfFileAlreadyExists() throws IOException {
         File existedFile = new File(SwitchingFileSaver.fileNameFormat("history", messageDateTime, 0));
         existedFile.delete();

@@ -1,4 +1,4 @@
-package com.razdolbai.server.saver;
+package com.razdolbai.server.history.saver;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -39,7 +39,7 @@ public class SwitchingFileSaver extends FileSaver {
     }
 
     @Override
-    public synchronized void save(String string, LocalDateTime dateTime) throws IOException {
+    public void save(String string, LocalDateTime dateTime) throws IOException {
         if (sizeCounter > sizeLimit ||
                 this.dateTime.getDayOfYear() != dateTime.getDayOfYear() ||
                 this.dateTime.getYear() != dateTime.getYear()) {

@@ -1,4 +1,4 @@
-package com.razdolbai.server.reader;
+package com.razdolbai.server.history.reader;
 
 import java.util.List;
 
