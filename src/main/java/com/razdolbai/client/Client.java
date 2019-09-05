@@ -5,6 +5,8 @@ import java.net.Socket;
 
 public class Client {
 
+    private static BufferedReader inFromSocket = null;
+
     private Client() {
     }
 
@@ -20,6 +22,8 @@ public class Client {
                         new InputStreamReader(
                                 new BufferedInputStream(socket.getInputStream())))
         ) {
+
+            inFromSocket = in;
             Proxy proxy = new Proxy(out, new SystemExit());
             InputConsole inputConsole = new InputConsole(proxy);
 
@@ -47,6 +51,9 @@ public class Client {
         }));
     }
 
+    public static void printToOther() throws IOException {
+        System.out.println(inFromSocket.readLine());
+    }
 
 }
 
