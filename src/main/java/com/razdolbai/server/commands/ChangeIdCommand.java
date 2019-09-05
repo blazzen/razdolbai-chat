@@ -38,7 +38,7 @@ public class ChangeIdCommand implements Command {
         } else {
             message = oldNickname + " has changed name to " + newNickname;
         }
-        String decoratedMessage = timestamp.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")) + "\n" + message + "\n";
+        String decoratedMessage = "[" + timestamp.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")) + "] " + message;
         sessionStore.sendToAll(decoratedMessage);
     }
 }

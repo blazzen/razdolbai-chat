@@ -33,9 +33,9 @@ public class SendCommand implements Command {
     }
 
     private String decorate(String message) {
-        return timestamp.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")) + "\n" +
-                session.getUsername() + "\n" +
-                message + "\n";
+        return "[" + timestamp.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")) + "] " +
+                session.getUsername() + ": " +
+                message;
     }
 
     private void checkUsername() throws UnidentifiedUserException {
