@@ -51,12 +51,12 @@ public class CommandSenderTest {
 
     @Test
     public void shouldExitIfCloseCommandIsPassed() {
-        doNothing().when(systemExitMock).exit(0);
+        doNothing().when(systemExitMock).exit();
         Command command = new Command(CommandType.CLOSE, "");
 
         sut.send(command);
 
-        verify(systemExitMock).exit(0);
+        verify(systemExitMock).exit();
 
     }
 

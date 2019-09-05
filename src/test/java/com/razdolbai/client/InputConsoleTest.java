@@ -5,6 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.*;
+import java.util.logging.Logger;
 
 import static org.mockito.Mockito.*;
 
@@ -14,12 +15,13 @@ public class InputConsoleTest {
     private CommandSender commandSenderMock = mock(CommandSender.class);
     private BufferedReader readerMock = mock(BufferedReader.class);
     private InputParser inputParserMock = mock(InputParser.class);
+    private Logger loggerSpy = spy(Logger.class);
     private InputConsole sut;
 
     @Before
     public void setUp() {
 
-        sut = new InputConsole(commandSenderMock, readerMock, inputParserMock);
+        sut = new InputConsole(commandSenderMock, readerMock, inputParserMock, loggerSpy);
 
     }
 
