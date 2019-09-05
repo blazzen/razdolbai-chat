@@ -22,14 +22,18 @@ public class OutputConsoleWriter implements Runnable {
     public void run() {
         try {
             while (!Thread.currentThread().isInterrupted()) {
-                String inputData = in.readLine();
-                if (inputData != null) {
-                    consoleOutput.println(inputData);
-                    consoleOutput.flush();
-                }
+                processInput();
             }
         } catch (IOException e) {
             logger.log(Level.SEVERE, EXCEPTION_MESSAGE, e);
+        }
+    }
+
+    void processInput() throws IOException {
+        String inputData = in.readLine();
+        if (inputData != null && !inputData.isEmpty()) {
+            consoleOutput.println(inputData);
+            consoleOutput.flush();
         }
     }
 }
