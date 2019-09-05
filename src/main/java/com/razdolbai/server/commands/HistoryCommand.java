@@ -9,8 +9,6 @@ import java.util.List;
 public class HistoryCommand implements Command {
     private final Session session;
     private final HistoryAccessObject history;
-
-
     public HistoryCommand(Session session, HistoryAccessObject history) {
         this.session = session;
         this.history = history;
