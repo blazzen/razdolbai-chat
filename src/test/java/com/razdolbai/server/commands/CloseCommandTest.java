@@ -24,6 +24,7 @@ public class CloseCommandTest {
         when(mockSession.getUsername()).thenReturn(nickname);
         String message = nickname + " has left the chat";
         testCloseCommand.execute();
+        verify(mockSessionStore).remove(mockSession);
         verify(mockSession).getUsername();
         verify(mockSessionStore).sendToAll(message);
     }
@@ -31,6 +32,7 @@ public class CloseCommandTest {
     public void shouldCloseWithoutMessage(){
         when(mockSession.getUsername()).thenReturn(null);
         testCloseCommand.execute();
+        verify(mockSessionStore).remove(mockSession);
         verify(mockSession).getUsername();
     }
 }
