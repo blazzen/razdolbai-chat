@@ -55,8 +55,8 @@ public class SwitchingFileReaderTest {
 
         assertThat(history.size()).isEqualTo(2);
 
-        assertThat(history.get(0)).isEqualTo("[" + messageDateTime + "]" + message);
-        assertThat(history.get(1)).isEqualTo("[" + messageDateTime + "]" + message1);
+        assertThat(history.get(0)).isEqualTo(message);
+        assertThat(history.get(1)).isEqualTo(message1);
     }
 
     @Test
@@ -71,8 +71,8 @@ public class SwitchingFileReaderTest {
 
 
         List<String> history = sut.getHistory();
-        assertThat(history.get(0)).isEqualTo("[" + messageDateTime + "]" + message);
-        assertThat(history.get(1)).isEqualTo("[" + messageDateTime + "]" + message1);
+        assertThat(history.get(0)).isEqualTo(message);
+        assertThat(history.get(1)).isEqualTo(message1);
     }
 
 
@@ -92,15 +92,13 @@ public class SwitchingFileReaderTest {
         innerDirectory.mkdir();
 
         File lastFile = new File(SwitchingFileSaver.fileNameFormat("history", messageDateTime.plusDays(1), 0));
-        System.out.println(lastFile.getName());
-        System.out.println("./resources/History/tmpdir/" + lastFile.getName());
         lastFile.renameTo(new File("./resources/History/tmpdir/" + lastFile.getName()));
 
         List<String> history = sut.getHistory();
         assertThat(history.size()).isEqualTo(3);
-        assertThat(history.get(0)).isEqualTo("[" + messageDateTime + "]" + message);
-        assertThat(history.get(1)).isEqualTo("[" + messageDateTime + "]" + message1);
-        assertThat(history.get(2)).isEqualTo("[" + messageDateTime.plusDays(1) + "]" + message1);
+        assertThat(history.get(0)).isEqualTo(message);
+        assertThat(history.get(1)).isEqualTo(message1);
+        assertThat(history.get(2)).isEqualTo(message2);
 
         new File("./resources/History/tmpdir/" + lastFile.getName()).delete();
         innerDirectory.delete();
