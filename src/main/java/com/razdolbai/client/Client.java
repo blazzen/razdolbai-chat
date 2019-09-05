@@ -8,7 +8,6 @@ public class Client {
 
     private Client() {
     }
-
     public static void main(String[] args) {
 
         String[] existingCommands = {"/snd", "/hist", "/chid", "/close"};
@@ -24,6 +23,7 @@ public class Client {
         ) {
             final ServerSocket connectionListener = new ServerSocket(666);
             final Socket server = connectionListener.accept();
+            System.out.println("Assepted");
             try (final PrintWriter consoleOutput = new PrintWriter(
                     new OutputStreamWriter(
                             new BufferedOutputStream(
@@ -53,5 +53,7 @@ public class Client {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
     }
+
 }
