@@ -2,6 +2,7 @@ package com.razdolbai.server.history.reader;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class SwitchingFileReader implements Reader {
@@ -16,13 +17,17 @@ public class SwitchingFileReader implements Reader {
     }
 
     static void readAllLinesDFS(File folder, List<String> res) {
-        for(File f : folder.listFiles()) {
-            if(f.isDirectory()) {
-                readAllLinesDFS(f, res);
+        if (folder == null) return;
+        File[] files = folder.listFiles();
+        if(files == null) return;
+        Arrays.sort(files);
+        for(File currentFile : files) {
+            if(currentFile.isDirectory()) {
+                readAllLinesDFS(currentFile, res);
             }
 
-            if (f.isFile()) {
-                try (BufferedReader reader = new BufferedReader(new FileReader(f))) {
+            if (currentFile.isFile()) {
+                try (BufferedReader reader = new BufferedReader(new FileReader(currentFile))) {
                     String line;
                     while ( (line = reader.readLine()) != null ) {
                         res.add(line);
