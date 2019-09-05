@@ -6,49 +6,37 @@ import com.razdolbai.server.commands.Command;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class Server {
-    private final ExecutorService executorService;
-    private final CommandFactory commandFactory;
-    private final Identificator identificator;
-    private Set<PrintWriter> clients;
     private ServerSocket connectionListener;
+    private SessionFactory sessionFactory;
+    private SessionStore sessionStore;
 
-    public Server(CommandFactory commandFactory) {
-        this.commandFactory = commandFactory;
-        this.identificator = new Identificator();
-        this.executorService = Executors.newCachedThreadPool();
-        clients = new HashSet<>();
+    public Server(SessionFactory sessionFactory, SessionStore sessionStore) {
+        this.sessionFactory = sessionFactory;
+        this.sessionStore = sessionStore;
     }
 
-    public Identificator getIdentificator() {
-        return identificator;
-    }
-
-    private void startServer() {
+    void startServer() {
         try {
             connectionListener = new ServerSocket(8081);
-            registerShutdownHook(executorService);
+            registerShutdownHook();
             while (true) {
-                startConnection(connectionListener);
+                Socket socket = connectionListener.accept();
+                Session session = sessionFactory.createSession(socket);
+                sessionStore.register(session);
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    private void registerShutdownHook(ExecutorService executorService) {
+    private void registerShutdownHook() {
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            executorService.shutdown();
             if (connectionListener != null) {
                 try {
                     connectionListener.close();
-                    clients.forEach(PrintWriter::close);
+                    sessionStore.closeAll();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -56,55 +44,4 @@ public class Server {
             System.out.println("Server closed");
         }));
     }
-
-    private void startConnection(ServerSocket connectionListener) throws IOException {
-        Socket socket = connectionListener.accept();
-        executorService.execute(() -> {
-            try (Socket mysocket = socket;
-                    final PrintWriter out = new PrintWriter(
-                    new OutputStreamWriter(
-                            new BufferedOutputStream(
-                                    mysocket.getOutputStream())));
-                 final BufferedReader in = new BufferedReader(
-                         new InputStreamReader(
-                                 new BufferedInputStream(
-                                         mysocket.getInputStream())))) {
-                processClient(in, out);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        });
-    }
-
-
-    private void processClient(BufferedReader socketIn, PrintWriter socketOut) {
-        try {
-            clients.add(socketOut);
-            String readLine = socketIn.readLine();
-            while (!(("type:" + CommandType.CLOSE.getValue()).equals(readLine) || Thread.currentThread().isInterrupted())) {
-                readLine = LocalDateTime.now().toString() + " " + readLine;
-                System.out.println("debug: " + readLine);
-                clients.forEach(c->System.out.println(c.toString()));
-                sendToAllClients(readLine);
-                readLine = socketIn.readLine();
-            }
-            socketOut.println("Success");
-            clients.remove(socketOut);
-            System.out.println("client closed");
-        } catch (IOException e) {
-            System.out.println("Error in processClient");
-            e.printStackTrace();
-            socketOut.println("Error: " + e.getMessage());
-        } finally {
-            socketOut.flush();
-        }
-    }
-
-    private void sendToAllClients(String msg) {
-        clients.forEach(printWriter -> {
-            printWriter.println(msg);
-            printWriter.flush();
-        });
-    }
-
 }
