@@ -1,2 +1,2 @@
 cd ./target/classes
-java com.razdolbai.server.Server
+java com.razdolbai.server.ServerLauncher
