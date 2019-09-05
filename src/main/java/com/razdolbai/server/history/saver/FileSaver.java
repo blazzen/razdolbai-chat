@@ -34,6 +34,7 @@ public class FileSaver implements Saver {
     @Override
     public void save(String string, LocalDateTime dateTime) throws IOException{
         out.println("[" + dateTime.toString() + "]" + string);
+        out.flush();
     }
 
     @Override
