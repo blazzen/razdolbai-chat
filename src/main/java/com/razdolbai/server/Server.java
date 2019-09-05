@@ -1,5 +1,6 @@
 package com.razdolbai.server;
 
+import com.razdolbai.common.CommandType;
 import com.razdolbai.server.commands.Command;
 
 import java.io.*;
@@ -80,7 +81,7 @@ public class Server {
         try {
             clients.add(socketOut);
             String readLine = socketIn.readLine();
-            while (!("type:/close".equals(readLine)) && !(Thread.currentThread().isInterrupted())) {
+            while (!(("type:" + CommandType.CLOSE.getValue()).equals(readLine) || Thread.currentThread().isInterrupted())) {
                 readLine = LocalDateTime.now().toString() + " " + readLine;
                 System.out.println("debug: " + readLine);
                 clients.forEach(c->System.out.println(c.toString()));
