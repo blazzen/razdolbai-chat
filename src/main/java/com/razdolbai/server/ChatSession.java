@@ -10,14 +10,14 @@ import java.net.Socket;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-public class ChatSession implements Session{
+public class ChatSession implements Session {
     private String username;
     private Socket socket;
     private BufferedReader socketIn;
     private PrintWriter socketOut;
     private CommandFactory commandFactory;
 
-    public ChatSession(String username, Socket socket, BufferedReader socketIn, PrintWriter socketOut, CommandFactory commandFactory) {
+    ChatSession(String username, Socket socket, BufferedReader socketIn, PrintWriter socketOut, CommandFactory commandFactory) {
         this.username = username;
         this.socket = socket;
         this.socketIn = socketIn;
@@ -27,29 +27,47 @@ public class ChatSession implements Session{
 
     @Override
     public void run() {
-        try (Socket mySocket = socket;
-             final PrintWriter mySocketOut = socketOut;
-             final BufferedReader mySocketIn = socketIn) {
+        try {
             Command command = null;
             while (!(command instanceof CloseCommand)) {
-                String message = mySocketIn.readLine();
+                String message = socketIn.readLine();
                 String timeStamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
                 command = commandFactory.createCommand(this, message, timeStamp);
                 command.execute(); // command --> session.send(msg)
                 System.out.printf("Debug: %s %s %s" + System.lineSeparator(), username, timeStamp, message);
             }
-        } catch (IOException e) {
+            close();
+        } catch (Exception e) {
             e.printStackTrace();
-        } catch (Exception e) {// TODO: 2019-09-04 add catch for NotAuthorizedException
-            e.printStackTrace();
-        }
+        }// TODO: 2019-09-04 add catch for NotAuthorizedException
     }
 
-    void send(String message) {
+    @Override
+    public void send(String message) {
         socketOut.println(message);
         socketOut.flush();
     }
 
+    @Override
+    public void close() {
+        try {
+            if (socketIn != null) {
+                socketIn.close();
+            }
+            if (socketOut != null) {
+                socketOut.close();
+            }
+            if (socket != null) {
+                socket.close();
+            }
+        } catch (IOException e) {
+            System.out.printf("Debug: error in closing session %s" + System.lineSeparator(), username);
+            e.printStackTrace();
+        }
+        System.out.printf("Debug: %s session closed" + System.lineSeparator(), username);
+    }
+
+    @Override
     public String getUsername() {
         return username;
     }
@@ -58,5 +76,4 @@ public class ChatSession implements Session{
     public void setUsername(String username) {
         this.username = username;
     }
-
 }
