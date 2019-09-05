@@ -2,6 +2,7 @@ package com.razdolbai.server.history.saver;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -14,12 +15,14 @@ public class SwitchingFileSaver extends FileSaver {
     private final int sizeLimit;
     private int sizeCounter = 0;
     private int fileCounter = 0;
+    private final static String pathname = Paths.get(".","resources", "History").toString();
     private final static String name = "history";
     private final static String format = ".txt";
+    private final static int defaultSizeLimit = 2 * 150 * 2097152;
 
 
     static {
-        File directory = new File("./resources/History");
+        File directory = new File(pathname);
         if(!directory.exists()) {
             directory.mkdirs();
         }
@@ -37,11 +40,11 @@ public class SwitchingFileSaver extends FileSaver {
     public SwitchingFileSaver() throws IOException {
         dateTime = LocalDateTime.now();
         this.open(dateTime);
-        this.sizeLimit = 2 * 150 * 2097152;
+        this.sizeLimit = defaultSizeLimit;
     }
 
     public static String fileNameFormat(String name, LocalDateTime dateTime, int fileCounter) {
-        return "./resources/History/" + name + "_"
+        return pathname + File.separator + name + "_"
                 + dateTime.getDayOfMonth() + "_"
                 + dateTime.getMonth() + "_"
                 + dateTime.getYear() + "_" +
