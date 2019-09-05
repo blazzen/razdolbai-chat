@@ -26,12 +26,19 @@ public class Client {
                                 new BufferedInputStream(socket.getInputStream())))
         ) {
             PrintWriter consoleOutput = createPrinter();
+            System.out.println(consoleOutput);
+            consoleOutput.println("hello");
 
             Thread thread = new Thread(() -> {
                 try {
                     while (true) {
                         String inputData = in.readLine();
-                        if (inputData != null & consoleOutput!=null)  {
+                        if  (inputData != null) {
+                            System.out.println(inputData);
+                        }
+                        consoleOutput.println("hi");
+                        if (inputData != null)  {
+                            consoleOutput.println("found smth");
                             consoleOutput.println(inputData);
                         }
                     }
@@ -39,8 +46,8 @@ public class Client {
                     e.printStackTrace();
                 }
             });
-            thread.start();
 
+            thread.start();
             Proxy proxy = new Proxy(out);
             InputConsole inputConsole = new InputConsole(proxy);
             inputConsole.readCommand(existingCommands);

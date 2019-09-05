@@ -14,9 +14,8 @@ public class OutputConsole {
                         new InputStreamReader(
                                 new BufferedInputStream(socket.getInputStream())))
         ) {
-            String socketInput;
             while (true) {
-                socketInput = in.readLine();
+                String socketInput = in.readLine();
                 if (socketInput != null) {
                     System.out.println(socketInput);
                 }
