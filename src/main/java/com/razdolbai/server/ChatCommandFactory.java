@@ -2,6 +2,7 @@ package com.razdolbai.server;
 
 import com.razdolbai.common.CommandType;
 import com.razdolbai.server.commands.*;
+import com.razdolbai.server.history.HistoryAccessObject;
 import com.razdolbai.server.history.saver.Saver;
 
 import java.time.LocalDateTime;
@@ -12,15 +13,17 @@ public class ChatCommandFactory implements CommandFactory {
     private final SessionStore sessionStore;
     private final Saver saver;
     private final Identificator identificator;
+    private final HistoryAccessObject history;
 
     public ChatCommandFactory(Parser parser,
                               SessionStore sessionStore,
                               Saver saver,
-                              Identificator identificator) {
+                              Identificator identificator, HistoryAccessObject history) {
         this.parser = parser;
         this.sessionStore = sessionStore;
         this.saver = saver;
         this.identificator = identificator;
+        this.history = history;
     }
 
     @Override
@@ -43,7 +46,7 @@ public class ChatCommandFactory implements CommandFactory {
     }
 
     private Command createHistCommand(Session session) {
-        return new HistoryCommand(session);
+        return new HistoryCommand(session, history);
     }
 
     private Command createCloseCommand(Session session) {
