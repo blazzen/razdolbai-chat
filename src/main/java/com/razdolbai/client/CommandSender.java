@@ -5,13 +5,13 @@ import com.razdolbai.common.CommandType;
 
 import java.io.PrintWriter;
 
-class Proxy {
+class CommandSender {
     private static final String DELIMITER = "\0";
 
     private PrintWriter out;
     private SystemExit systemExit;
 
-    Proxy(PrintWriter out, SystemExit systemExit) {
+    CommandSender(PrintWriter out, SystemExit systemExit) {
         this.out = out;
         this.systemExit = systemExit;
     }
