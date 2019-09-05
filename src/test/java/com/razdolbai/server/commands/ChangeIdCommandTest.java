@@ -40,8 +40,8 @@ public class ChangeIdCommandTest {
 
     @Test
     public void shouldChangeIdTest() throws OccupiedNicknameException, IOException {
-        String decoratedMessage = timestamp.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")) + "\n"
-                + oldnickname + " has changed name to " + newnickname + "\n";
+        String decoratedMessage = "[" +timestamp.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")) + "] "
+                + oldnickname + " has changed name to " + newnickname;
         when(mockSession.getUsername()).thenReturn(oldnickname);
         doNothing().when(mockSaver).save(decoratedMessage, timestamp);
         testChangeIdCommand.execute();
@@ -53,8 +53,8 @@ public class ChangeIdCommandTest {
 
     @Test
     public void shouldCreateIdTest() throws OccupiedNicknameException, IOException {
-        String decoratedMessage = timestamp.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")) + "\n"
-                + newnickname + " joined the chat" + "\n";
+        String decoratedMessage = "[" + timestamp.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")) + "] "
+                + newnickname + " joined the chat";
         when(mockSession.getUsername()).thenReturn(null);
         doNothing().when(mockSaver).save(decoratedMessage, timestamp);
         testChangeIdCommand.execute();
