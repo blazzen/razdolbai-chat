@@ -1,9 +1,16 @@
 package com.razdolbai.client;
 
 import java.io.*;
+import java.net.ServerSocket;
 import java.net.Socket;
 
 public class Client {
+    private static BufferedReader inFromServer;
+
+    public Client() {
+        inFromServer = null;
+    }
+
 
     public static void main(String[] args) throws IOException {
 
@@ -18,12 +25,14 @@ public class Client {
                         new InputStreamReader(
                                 new BufferedInputStream(socket.getInputStream())))
         ) {
+            PrintWriter consoleOutput = createPrinter();
+
             Thread thread = new Thread(() -> {
                 try {
                     while (true) {
-                        String a = in.readLine();
-                        if (a != null) {
-                            System.out.println(a);
+                        String inputData = in.readLine();
+                        if (inputData != null & consoleOutput!=null)  {
+                            consoleOutput.println(inputData);
                         }
                     }
                 } catch (IOException e) {
@@ -38,5 +47,26 @@ public class Client {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private static PrintWriter createPrinter() {
+        try (final ServerSocket connectionListener = new ServerSocket(666)) {
+            final Socket socket = connectionListener.accept();
+            System.out.println("Assepted");
+            try (final PrintWriter out = new PrintWriter(
+                    new OutputStreamWriter(
+                            new BufferedOutputStream(
+                                    socket.getOutputStream())))) {
+                System.out.println("Started");
+                return out;
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }
