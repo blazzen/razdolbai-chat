@@ -15,8 +15,8 @@ public class Server {
     }
 
     void startServer() {
-        try {
-            connectionListener = new ServerSocket(8081);
+        try (ServerSocket serverSocket = new ServerSocket(8081)) {
+            connectionListener = serverSocket;
             registerShutdownHook();
             while (true) {
                 Socket socket = connectionListener.accept();
@@ -34,8 +34,7 @@ public class Server {
                 try {
                     sessionStore.sendToAll("Server died ;<");
                     sessionStore.closeAll();
-                    connectionListener.close();
-                } catch (IOException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
