@@ -36,12 +36,9 @@ public class Client {
                                         server.getOutputStream())))
         ) {
 
-
-            System.out.println("Accepted");
-
             Thread thread = new Thread(() -> {
                 try {
-                    while (true) {
+                    while (!Thread.currentThread().isInterrupted()) {
                         String inputData = in.readLine();
                         if (inputData != null) {
                             consoleOutput.println(inputData);
@@ -54,7 +51,6 @@ public class Client {
             });
 
             thread.start();
-
 
             new ShutdownHookCreator().registerShutdownHook(socket, out, in, reader, logger);
             CommandSender commandSender = new CommandSender(out, new SystemExit());
