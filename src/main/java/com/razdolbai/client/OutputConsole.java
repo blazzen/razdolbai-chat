@@ -5,20 +5,25 @@ import java.net.Socket;
 
 public class OutputConsole {
     public static void main(String[] args) throws IOException {
-
-        while (true) {
-            try {
-                Client.printToOther();
-            } catch (NullPointerException ex) {
-                continue;
+        try (
+                final Socket socket = new Socket("localhost", 666);
+                final PrintWriter out = new PrintWriter(
+                        new OutputStreamWriter(
+                                new BufferedOutputStream(socket.getOutputStream())));
+                final BufferedReader in = new BufferedReader(
+                        new InputStreamReader(
+                                new BufferedInputStream(socket.getInputStream())))
+        ) {
+            String socketInput;
+            while (true) {
+                socketInput = in.readLine();
+                if (socketInput != null) {
+                    System.out.println(socketInput);
+                }
             }
 
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }
-
-/*
-    public static void printToOther() throws IOException {
-        System.out.println(inFromSocket.readLine());
-    }
- */
