@@ -43,22 +43,16 @@ public class Client {
                 });
 
                 thread.start();
-                Proxy proxy = new Proxy(out);
+                Proxy proxy = new Proxy(out, new SystemExit());
                 InputConsole inputConsole = new InputConsole(proxy);
-                inputConsole.readCommand(existingCommands);
+                inputConsole.readCommand();
+
+                registerShutdownHook(socket, out, in);
 
             } catch (IOException e) {
                 e.printStackTrace();
             }
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-            Proxy proxy = new Proxy(out, new SystemExit());
-            InputConsole inputConsole = new InputConsole(proxy);
-            inputConsole.readCommand();
-
-            registerShutdownHook(socket, out, in);
         } catch (IOException e) {
             e.printStackTrace();
         }
