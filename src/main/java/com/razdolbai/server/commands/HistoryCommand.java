@@ -8,21 +8,20 @@ import java.util.List;
 
 public class HistoryCommand implements Command {
     private final Session session;
-    private HistoryAccessObject history = null;
+    private final HistoryAccessObject history;
 
-    public HistoryCommand(Session session) {
+
+    public HistoryCommand(Session session, HistoryAccessObject history) {
         this.session = session;
+        this.history = history;
     }
 
     @Override
     public void execute() {
-        try {
-            List<String> historyList = new HistoryAccessObject().getHistory();
-            for (String mess : historyList) {
-                session.send(mess);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
+        session.send("Chat history: ");
+        List<String> historyList = history.getHistory();
+        for (String mess : historyList) {
+            session.send(mess);
         }
     }
 }
