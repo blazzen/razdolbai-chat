@@ -1,11 +1,13 @@
 package com.razdolbai.server;
 
 import com.razdolbai.server.commands.*;
+import com.razdolbai.server.history.HistoryAccessObject;
 import com.razdolbai.server.history.saver.Saver;
 import com.razdolbai.server.history.saver.SwitchingFileSaver;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 
@@ -19,15 +21,18 @@ public class ChatCommandFactoryTest {
     private Identificator identificator;
     private Session session;
     private ChatCommandFactory commandFactory;
+    private HistoryAccessObject history;
 
     @Before
-    public void setUp() {
+    public void setUp() throws IOException {
         parser = mock(Parser.class);
         sessionStore = mock(ChatSessionStore.class);
         saver = mock(SwitchingFileSaver.class);
         identificator = mock(Identificator.class);
         session = mock(ChatSession.class);
-        commandFactory = new ChatCommandFactory(parser, sessionStore, saver, identificator);
+        history = new HistoryAccessObject();
+
+        commandFactory = new ChatCommandFactory(parser, sessionStore, saver, identificator, history);
     }
 
     @Test

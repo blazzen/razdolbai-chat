@@ -1,6 +1,5 @@
 package com.razdolbai.server;
 
-import com.razdolbai.server.commands.Command;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.internal.util.reflection.Whitebox;

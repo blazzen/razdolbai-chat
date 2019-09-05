@@ -17,12 +17,10 @@ public class HistoryAccessObject implements History {
     private ReadWriteLock readWriteLock;
 
     public HistoryAccessObject() throws IOException {
-       saver = new SwitchingFileSaver();
-       reader = new SwitchingFileReader();
-       readWriteLock = new ReentrantReadWriteLock();
+        saver = new SwitchingFileSaver();
+        reader = new SwitchingFileReader();
+        readWriteLock = new ReentrantReadWriteLock();
     }
-
-
 
     @Override
     public List<String> getHistory() {

@@ -1,6 +1,9 @@
 package com.razdolbai.server.commands;
 
 import com.razdolbai.server.Session;
+import com.razdolbai.server.history.HistoryAccessObject;
+
+import java.util.List;
 
 public class HistoryCommand implements Command {
     private final Session session;
