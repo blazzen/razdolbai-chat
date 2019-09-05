@@ -11,6 +11,10 @@ import java.util.List;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
+
+/**
+ * Class that contains reader and saver. Use one instance for all threads. Do NOT clears all previous history
+ */
 public class HistoryAccessObject implements History {
     private Saver saver;
     private Reader reader;
