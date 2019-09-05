@@ -4,7 +4,7 @@ import java.io.*;
 import java.net.Socket;
 
 public class OutputConsole {
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         try (
                 final Socket socket = new Socket("localhost", 666);
                 final PrintWriter out = new PrintWriter(
@@ -14,9 +14,8 @@ public class OutputConsole {
                         new InputStreamReader(
                                 new BufferedInputStream(socket.getInputStream())))
         ) {
-            String socketInput;
             while (true) {
-                socketInput = in.readLine();
+                String socketInput = in.readLine();
                 if (socketInput != null) {
                     System.out.println(socketInput);
                 }
@@ -27,3 +26,4 @@ public class OutputConsole {
         }
     }
 }
+
