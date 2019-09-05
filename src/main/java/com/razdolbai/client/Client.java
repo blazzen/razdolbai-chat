@@ -52,7 +52,8 @@ public class Client {
 
             thread.start();
 
-
+            ProcessBuilder processBuilder = new ProcessBuilder();
+            processBuilder.command("echo hello");
             CommandSender commandSender = new CommandSender(out, new SystemExit());
             InputConsole inputConsole = new InputConsole(commandSender, reader, new InputParser(), logger);
 
