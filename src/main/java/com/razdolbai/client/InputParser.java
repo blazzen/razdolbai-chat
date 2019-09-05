@@ -3,11 +3,6 @@ package com.razdolbai.client;
 import java.util.Arrays;
 
 class InputParser {
-    private String[] existingCommands;
-
-    InputParser(String[] existingCommands) {
-        this.existingCommands = existingCommands;
-    }
 
     Command parse(String input) {
         String message = "";
@@ -19,12 +14,12 @@ class InputParser {
             commandType = input;
         }
 
-        if (!Arrays.asList(existingCommands).contains(commandType)){
+        if (!ExistingCommands.contains(commandType)) {
             System.out.println("Unknown command, try again");
             return null;
         }
 
-        if (message.length()>149){
+        if (message.length() > 149) {
             System.out.println("Message is too long, try again");
             return null;
         }
@@ -32,4 +27,6 @@ class InputParser {
         return new Command(commandType, message);
 
     }
+
+
 }
