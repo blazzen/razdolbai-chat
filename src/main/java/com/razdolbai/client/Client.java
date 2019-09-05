@@ -21,6 +21,9 @@ public class Client {
         Logger logger = Logger.getLogger("ClientLogger");
         logger.setLevel(Level.INFO);
 
+        System.out.println("Hello");
+        System.out.println(args[0]);
+
         try (
                 final Socket socket = new Socket("localhost", 8081);
                 final PrintWriter out = new PrintWriter(
@@ -48,8 +51,6 @@ public class Client {
 
             thread.start();
 
-            ProcessBuilder processBuilder = new ProcessBuilder();
-            processBuilder.command("echo hello");
             CommandSender commandSender = new CommandSender(out, new SystemExit());
             InputConsole inputConsole = new InputConsole(commandSender, reader, new InputParser(), logger);
 
