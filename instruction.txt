@@ -1,0 +1,5 @@
+1. double click on startServer.sh
+2. open git bash from working dir
+3. exec ./clientInput.sh portNumber
+4. open git bash from working dir
+5. exec ./clientOutput.sh samePortNumber

@@ -19,6 +19,7 @@ public class SwitchingFileSaver extends FileSaver {
     private final static String name = "history";
     private final static String format = ".txt";
     private final static int defaultSizeLimit = 2 * 150 * 2097152;
+    private final int dateTimeSize;
 
 
     static {
@@ -34,6 +35,7 @@ public class SwitchingFileSaver extends FileSaver {
         dateTime = LocalDateTime.now();
         this.open(dateTime);
         this.sizeLimit = sizeLimit;
+        dateTimeSize = dateTime.toString().length();
     }
 
 
@@ -41,6 +43,7 @@ public class SwitchingFileSaver extends FileSaver {
         dateTime = LocalDateTime.now();
         this.open(dateTime);
         this.sizeLimit = defaultSizeLimit;
+        dateTimeSize = dateTime.toString().length();
     }
 
     public static String fileNameFormat(String name, LocalDateTime dateTime, int fileCounter) {
@@ -53,13 +56,14 @@ public class SwitchingFileSaver extends FileSaver {
 
     @Override
     public void save(String string, LocalDateTime dateTime) throws IOException {
-        Boolean isDateChanged = !this.dateTime.toLocalDate().equals(dateTime.toLocalDate());
+        boolean isDateChanged = !this.dateTime.toLocalDate().equals(dateTime.toLocalDate());
         if (sizeCounter > sizeLimit || isDateChanged) {
             sizeCounter = 0;
-            switchFile(dateTime);
             fileCounter = isDateChanged ? 0 : fileCounter++;
+            switchFile(dateTime);
+
         }
-        sizeCounter += string.getBytes().length;
+        sizeCounter += string.getBytes().length + dateTimeSize;
         super.save(string, dateTime);
         this.dateTime = dateTime;
     }
