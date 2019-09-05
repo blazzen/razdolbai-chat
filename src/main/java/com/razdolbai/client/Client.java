@@ -3,6 +3,7 @@ package com.razdolbai.client;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -17,7 +18,7 @@ public class Client {
     public static void main(String[] args) {
 
         Logger logger = Logger.getLogger("ClientLogger");
-        logger.setLevel(Level.SEVERE);
+        logger.setLevel(Level.INFO);
 
         try (
                 final Socket socket = new Socket("localhost", 8081);
@@ -36,19 +37,11 @@ public class Client {
                                         server.getOutputStream())))
         ) {
 
-            Thread thread = new Thread(() -> {
-                try {
-                    while (!Thread.currentThread().isInterrupted()) {
-                        String inputData = in.readLine();
-                        if (inputData != null) {
-                            consoleOutput.println(inputData);
-                            consoleOutput.flush();
-                        }
-                    }
-                } catch (IOException e) {
-                    logger.log(Level.SEVERE, EXCEPTION_MESSAGE, e);
-                }
-            });
+            FileHandler handler = new FileHandler("client.log", true);
+            logger.addHandler(handler);
+            logger.log(Level.INFO, "Client started");
+
+            Thread thread = new Thread(() -> new OutputConsoleWriter(consoleOutput, in, logger).run());
 
             thread.start();
 
@@ -61,6 +54,7 @@ public class Client {
             }
             consoleOutput.println("CLOSE");
             consoleOutput.flush();
+
         } catch (IOException e) {
             logger.log(Level.SEVERE, EXCEPTION_MESSAGE, e);
         }
