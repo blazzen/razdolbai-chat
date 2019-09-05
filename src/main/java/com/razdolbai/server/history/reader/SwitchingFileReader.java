@@ -5,10 +5,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SwitchingFileReader implements Reader {
+    private static final int initialCapacity = 2097152 * 5;
+    //About half of a day
 
     @Override
     public List<String> getHistory() {
-        ArrayList<String> res  = new ArrayList<>(2097152 * 5);
+        ArrayList<String> res  = new ArrayList<>(initialCapacity);
         readAllLinesDFS(new File("./resources/History"), res);
         return res;
     }
