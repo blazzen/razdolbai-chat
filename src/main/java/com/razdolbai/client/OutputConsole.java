@@ -20,6 +20,9 @@ public class OutputConsole {
         ) {
             while (!Thread.currentThread().isInterrupted()) {
                 String socketInput = in.readLine();
+                if ("CLOSE".equals(socketInput)) {
+                    Thread.currentThread().interrupt();
+                }
                 if (socketInput != null) {
                     System.out.println(socketInput);
                 }
