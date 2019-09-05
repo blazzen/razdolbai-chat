@@ -1,7 +1,7 @@
 package com.razdolbai.client;
 
 class SystemExit {
-    void exit(int status) {
-        System.exit(status);
+    void exit() {
+        Thread.currentThread().interrupt();
     }
 }

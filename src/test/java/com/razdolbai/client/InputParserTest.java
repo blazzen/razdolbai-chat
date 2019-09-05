@@ -67,6 +67,14 @@ public class InputParserTest {
     }
 
     @Test
+    public void shouldReturnNullIfEmptyStringIsPassed() {
+
+        Command result = sut.parse("");
+
+        assertThat(result).isEqualTo(null);
+    }
+
+    @Test
     public void shouldReturnCommandIfMessageAndCommandTypeIsPassed() {
 
         Command result = sut.parse(CommandType.SEND.getValue() + " testMsg");

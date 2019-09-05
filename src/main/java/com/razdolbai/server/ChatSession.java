@@ -2,6 +2,10 @@ package com.razdolbai.server;
 
 import com.razdolbai.server.commands.CloseCommand;
 import com.razdolbai.server.commands.Command;
+import com.razdolbai.server.exceptions.ChatException;
+import com.razdolbai.server.exceptions.OccupiedNicknameException;
+import com.razdolbai.server.exceptions.UnidentifiedUserException;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -16,6 +20,7 @@ public class ChatSession implements Session {
     private BufferedReader socketIn;
     private PrintWriter socketOut;
     private CommandFactory commandFactory;
+    private boolean isClosed = false;
 
     ChatSession(String username, Socket socket, BufferedReader socketIn, PrintWriter socketOut, CommandFactory commandFactory) {
         this.username = username;
@@ -28,18 +33,13 @@ public class ChatSession implements Session {
     @Override
     public void run() {
         try {
-            Command command = null;
-            while (!(command instanceof CloseCommand)) {
+            while (!isClosed) {
                 String message = socketIn.readLine();
-                String timeStamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-                command = commandFactory.createCommand(this, message, timeStamp);
-                command.execute(); // command --> session.send(msg)
-                System.out.printf("Debug: %s %s %s" + System.lineSeparator(), username, timeStamp, message);
+                processRequest(message);
             }
-            close();
         } catch (Exception e) {
             e.printStackTrace();
-        }// TODO: 2019-09-04 add catch for NotAuthorizedException
+        }
     }
 
     @Override
@@ -51,6 +51,7 @@ public class ChatSession implements Session {
     @Override
     public void close() {
         try {
+            isClosed = true;
             if (socketIn != null) {
                 socketIn.close();
             }
@@ -75,5 +76,25 @@ public class ChatSession implements Session {
     // will be set by ChIdCommand
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    private void processRequest(String message) throws IOException {
+        LocalDateTime timeStamp = LocalDateTime.now();
+        Command command = commandFactory.createCommand(this, message, timeStamp);
+        try {
+            command.execute(); // command --> session.send(msg)
+        } catch (UnidentifiedUserException e) {
+            processException(e, "First command should be /chid");
+        } catch (OccupiedNicknameException e) {
+            processException(e, "This nickname is occupied, try another one");
+        } catch (ChatException e) {
+            processException(e, "Some error has occurred");
+        }
+        System.out.printf("Debug: %s %s %s" + System.lineSeparator(), username, timeStamp, message);
+    }
+
+    private void processException(Exception e, String message) {
+        e.printStackTrace();
+        send(message);
     }
 }
