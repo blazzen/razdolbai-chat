@@ -5,14 +5,17 @@ import com.razdolbai.server.Session;
 import com.razdolbai.server.SessionStore;
 import com.razdolbai.server.exceptions.OccupiedNicknameException;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 public class ChangeIdCommand implements Command {
     private final Session session;
     private final Identificator identificator;
     private final String newNickname;
-    private final String timestamp;
+    private final LocalDateTime timestamp;
     private final SessionStore sessionStore;
 
-    public ChangeIdCommand(Session session, Identificator identificator, String newNickname, String timestamp, SessionStore sessionStore) {
+    public ChangeIdCommand(Session session, Identificator identificator, String newNickname, LocalDateTime timestamp, SessionStore sessionStore) {
         this.session = session;
         this.identificator = identificator;
         this.newNickname = newNickname;
@@ -35,7 +38,7 @@ public class ChangeIdCommand implements Command {
         } else {
             message = oldNickname + " has changed name to " + newNickname;
         }
-        String decoratedMessage = timestamp + "\n" + message + "\n";
+        String decoratedMessage = timestamp.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")) + "\n" + message + "\n";
         sessionStore.sendToAll(decoratedMessage);
     }
 }

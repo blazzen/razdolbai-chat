@@ -1,13 +1,23 @@
 package com.razdolbai.client;
 
 import java.io.*;
+import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 
 public class Client {
 
-    public static void main(String[] args) throws IOException {
+    private static final String EXCEPTION_MESSAGE = "Exception is thrown";
 
-        String[] existingCommands = {"/snd", "/hist", "/chid", "/close"};
+    private Client() {
+    }
+
+    public static void main(String[] args) {
+
+        Logger logger = Logger.getLogger("ClientLogger");
+        logger.setLevel(Level.SEVERE);
 
         try (
                 final Socket socket = new Socket("localhost", 8081);
@@ -16,27 +26,49 @@ public class Client {
                                 new BufferedOutputStream(socket.getOutputStream())));
                 final BufferedReader in = new BufferedReader(
                         new InputStreamReader(
-                                new BufferedInputStream(socket.getInputStream())))
+                                new BufferedInputStream(socket.getInputStream())));
+                final BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+                final ServerSocket connectionListener = new ServerSocket(666);
+                final Socket server = connectionListener.accept();
+                final PrintWriter consoleOutput = new PrintWriter(
+                        new OutputStreamWriter(
+                                new BufferedOutputStream(
+                                        server.getOutputStream())))
         ) {
+
+
+            System.out.println("Accepted");
+
             Thread thread = new Thread(() -> {
                 try {
                     while (true) {
-                        String a = in.readLine();
-                        if (a != null) {
-                            System.out.println(a);
+                        String inputData = in.readLine();
+                        if (inputData != null) {
+                            consoleOutput.println(inputData);
+                            consoleOutput.flush();
                         }
                     }
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    logger.log(Level.SEVERE, EXCEPTION_MESSAGE, e);
                 }
             });
+
             thread.start();
 
-            Proxy proxy = new Proxy(out);
-            InputConsole inputConsole = new InputConsole(proxy);
-            inputConsole.readCommand(existingCommands);
+
+            new ShutdownHookCreator().registerShutdownHook(socket, out, in, reader, logger);
+            CommandSender commandSender = new CommandSender(out, new SystemExit());
+            InputConsole inputConsole = new InputConsole(commandSender, reader, new InputParser(), logger);
+
+            while (!Thread.currentThread().isInterrupted()) {
+                inputConsole.readCommand();
+            }
+
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.log(Level.SEVERE, EXCEPTION_MESSAGE, e);
         }
+
     }
+
+
 }

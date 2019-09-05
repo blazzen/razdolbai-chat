@@ -28,6 +28,7 @@ public class ChatSessionStore implements SessionStore {
     @Override
     public void remove(Session session) {
         sessions.remove(session);
+        session.close();
     }
 
     @Override

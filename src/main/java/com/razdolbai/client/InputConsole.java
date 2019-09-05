@@ -2,34 +2,34 @@ package com.razdolbai.client;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 class InputConsole {
-    private Proxy proxy;
+    private CommandSender commandSender;
+    private BufferedReader reader;
+    private InputParser parser;
+    private Logger logger;
 
-
-    InputConsole(Proxy proxy) {
-        this.proxy = proxy;
+    InputConsole(CommandSender commandSender, BufferedReader reader, InputParser parser, Logger logger) {
+        this.commandSender = commandSender;
+        this.reader = reader;
+        this.parser = parser;
+        this.logger = logger;
     }
 
-    void readCommand(String[] existingCommands) throws IOException {
-
-        BufferedReader reader =
-                new BufferedReader(new InputStreamReader(System.in));
-
-        while (true) {
+    void readCommand() {
+        try {
 
             String input = reader.readLine();
 
-            InputParser parser = new InputParser(existingCommands);
             Command command = parser.parse(input);
             if (command != null) {
-                proxy.send(command);
+                commandSender.send(command);
             }
 
-
+        } catch (IOException e) {
+            logger.log(Level.SEVERE, "Exception is thrown", e);
         }
-
     }
-
 }
