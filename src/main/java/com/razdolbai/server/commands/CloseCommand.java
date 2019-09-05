@@ -14,7 +14,7 @@ public class CloseCommand implements Command {
 
     @Override
     public void execute() {
-        // TODO: close session
+        sessionStore.remove(session);
         sendLeaveMessage();
     }
 
