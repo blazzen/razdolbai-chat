@@ -18,7 +18,6 @@ public class HistoryCommand implements Command {
     public void execute() {
         try {
             history = new HistoryAccessObject();
-//            System.out.println(history.getHistory());
             List<String> list = history.getHistory();
             for ( String mess: list
                  ) {
