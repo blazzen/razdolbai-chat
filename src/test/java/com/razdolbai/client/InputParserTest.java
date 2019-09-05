@@ -1,5 +1,6 @@
 package com.razdolbai.client;
 
+import com.razdolbai.common.CommandType;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -27,7 +28,7 @@ public class InputParserTest {
 
         sut.parse("/send testtesttest");
 
-        assertThat(outContent.toString()).contains("Unknown command, try again");
+        assertThat(outContent.toString()).contains("Unknown command");
 
     }
 
@@ -42,7 +43,7 @@ public class InputParserTest {
     @Test
     public void shouldWriteErrorMessageIfCommandIsTooLong() {
 
-        sut.parse("/snd " + VERY_LONG_LINE);
+        sut.parse(CommandType.SEND.getValue() + " " + VERY_LONG_LINE);
 
         assertThat(outContent.toString()).contains("Message is too long, try again");
 
@@ -59,27 +60,27 @@ public class InputParserTest {
     @Test
     public void shouldReturnCommandIfOnlyCommandTypeIsPassed() {
 
-        Command result = sut.parse("/hist");
+        Command result = sut.parse(CommandType.HIST.getValue());
 
-        assertThat(result.getCommandType()).isEqualTo("/hist");
+        assertThat(result.getType()).isEqualTo(CommandType.HIST);
         assertThat(result.getMessage()).isEqualTo("");
     }
 
     @Test
     public void shouldReturnCommandIfMessageAndCommandTypeIsPassed() {
 
-        Command result = sut.parse("/snd testMsg");
+        Command result = sut.parse(CommandType.SEND.getValue() + " testMsg");
 
-        assertThat(result.getCommandType()).isEqualTo("/snd");
+        assertThat(result.getType()).isEqualTo(CommandType.SEND);
         assertThat(result.getMessage()).isEqualTo("testMsg");
     }
 
     @Test
     public void shouldReturnCommandIfMessageIsMaxLengthAndCommandTypeIsPassed() {
 
-        Command result = sut.parse("/snd " + NOT_LONG_ENOUGH_LINE);
+        Command result = sut.parse(CommandType.SEND.getValue() + " " + NOT_LONG_ENOUGH_LINE);
 
-        assertThat(result.getCommandType()).isEqualTo("/snd");
+        assertThat(result.getType()).isEqualTo(CommandType.SEND);
         assertThat(result.getMessage()).isEqualTo(NOT_LONG_ENOUGH_LINE);
     }
 

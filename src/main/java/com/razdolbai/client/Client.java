@@ -5,16 +5,12 @@ import java.net.Socket;
 
 public class Client {
 
-    private static BufferedReader inFromSocket = null;
-
     private Client() {
     }
 
     public static void main(String[] args) {
-
-
         try (
-                final Socket socket = new Socket("localhost", 666);
+                final Socket socket = new Socket("localhost", 8081);
                 final PrintWriter out = new PrintWriter(
                         new OutputStreamWriter(
                                 new BufferedOutputStream(socket.getOutputStream())));
@@ -22,17 +18,11 @@ public class Client {
                         new InputStreamReader(
                                 new BufferedInputStream(socket.getInputStream())))
         ) {
-
-            inFromSocket = in;
             Proxy proxy = new Proxy(out, new SystemExit());
             InputConsole inputConsole = new InputConsole(proxy);
-
-
             inputConsole.readCommand();
 
             registerShutdownHook(socket, out, in);
-
-
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -45,15 +35,14 @@ public class Client {
                 in.close();
                 out.close();
                 socket.close();
+
+                System.out.println("Successfully closed client");
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }));
     }
 
-    public static void printToOther() throws IOException {
-        System.out.println(inFromSocket.readLine());
-    }
 
 }
 

@@ -1,6 +1,6 @@
 package com.razdolbai.client;
 
-import java.util.Arrays;
+import com.razdolbai.common.CommandType;
 
 class InputParser {
 
@@ -8,14 +8,18 @@ class InputParser {
         String message = "";
         String commandType;
         if (input.contains(" ")) {
-            commandType = input.substring(0, input.indexOf(" "));
-            message = input.substring(input.indexOf(" ") + 1);
+            int separatorIndex = input.indexOf(' ');
+            commandType = input.substring(0, separatorIndex);
+            message = input.substring(separatorIndex + 1);
         } else {
             commandType = input;
         }
 
-        if (!ExistingCommands.contains(commandType)) {
-            System.out.println("Unknown command, try again");
+        CommandType command;
+        try {
+            command = CommandType.fromString(commandType);
+        } catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage());
             return null;
         }
 
@@ -24,9 +28,6 @@ class InputParser {
             return null;
         }
 
-        return new Command(commandType, message);
-
+        return new Command(command, message);
     }
-
-
 }

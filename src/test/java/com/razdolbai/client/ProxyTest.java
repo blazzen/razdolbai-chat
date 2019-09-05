@@ -1,5 +1,6 @@
 package com.razdolbai.client;
 
+import com.razdolbai.common.CommandType;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -22,14 +23,14 @@ public class ProxyTest {
 
     @Test
     public void shouldAddMessageIfMessageIsPresent() {
-        doNothing().when(printWriterMock).println("type:/snd\0msg:testtest");
+        doNothing().when(printWriterMock).println("type:" + CommandType.SEND.getValue() + "\0msg:testtest");
         doNothing().when(printWriterMock).flush();
 
-        Command command = new Command("/snd", "testtest");
+        Command command = new Command(CommandType.SEND, "testtest");
 
         sut.send(command);
 
-        verify(printWriterMock).println("type:/snd\0msg:testtest");
+        verify(printWriterMock).println("type:" + CommandType.SEND.getValue() + "\0msg:testtest");
         verify(printWriterMock).flush();
 
     }
@@ -37,14 +38,14 @@ public class ProxyTest {
     @Test
     public void shouldNotAddMessageIfCommandDoesNotHaveMessage() {
 
-        doNothing().when(printWriterMock).println("type:/hist");
+        doNothing().when(printWriterMock).println("type:" + CommandType.HIST.getValue());
         doNothing().when(printWriterMock).flush();
 
-        Command command = new Command("/hist", "");
+        Command command = new Command(CommandType.HIST, "");
 
         sut.send(command);
 
-        verify(printWriterMock).println("type:/hist");
+        verify(printWriterMock).println("type:" + CommandType.HIST.getValue());
         verify(printWriterMock).flush();
 
     }
@@ -55,7 +56,7 @@ public class ProxyTest {
         Proxy sut = new Proxy(printWriterMock, systemExitMock);
         doNothing().when(systemExitMock).exit(0);
 
-        Command command = new Command("/close", "");
+        Command command = new Command(CommandType.CLOSE, "");
 
         sut.send(command);
 
