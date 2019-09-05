@@ -4,7 +4,7 @@ import java.io.*;
 import java.net.Socket;
 
 public class OutputConsole {
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         try (
                 final Socket socket = new Socket("localhost", 666);
                 final PrintWriter out = new PrintWriter(
