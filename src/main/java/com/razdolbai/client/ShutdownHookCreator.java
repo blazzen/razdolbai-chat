@@ -8,7 +8,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 class ShutdownHookCreator {
-    void registerShutdownHook(Socket socket, PrintWriter out, BufferedReader in, BufferedReader reader, Logger logger) {
+    void registerShutdownHook(Socket socket, PrintWriter out, BufferedReader in,
+                              BufferedReader reader, Logger logger) {
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             try {
 

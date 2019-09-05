@@ -52,6 +52,7 @@ public class Client {
 
             thread.start();
 
+
             new ShutdownHookCreator().registerShutdownHook(socket, out, in, reader, logger);
             CommandSender commandSender = new CommandSender(out, new SystemExit());
             InputConsole inputConsole = new InputConsole(commandSender, reader, new InputParser(), logger);
@@ -59,7 +60,8 @@ public class Client {
             while (!Thread.currentThread().isInterrupted()) {
                 inputConsole.readCommand();
             }
-
+            consoleOutput.println("CLOSE");
+            consoleOutput.flush();
         } catch (IOException e) {
             logger.log(Level.SEVERE, EXCEPTION_MESSAGE, e);
         }
