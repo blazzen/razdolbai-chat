@@ -6,6 +6,7 @@ import java.net.Socket;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 
 
 public class Client {
@@ -38,6 +39,8 @@ public class Client {
         ) {
 
             FileHandler handler = new FileHandler("client.log", true);
+            SimpleFormatter simple = new SimpleFormatter();
+            handler.setFormatter(simple);
             logger.addHandler(handler);
             logger.log(Level.INFO, "Client started");
 
@@ -54,6 +57,7 @@ public class Client {
             }
             consoleOutput.println("CLOSE");
             consoleOutput.flush();
+            thread.interrupt();
 
         } catch (IOException e) {
             logger.log(Level.SEVERE, EXCEPTION_MESSAGE, e);
