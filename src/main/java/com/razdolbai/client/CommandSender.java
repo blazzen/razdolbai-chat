@@ -26,7 +26,7 @@ class CommandSender {
         out.flush();
 
         if (command.getType() == CommandType.CLOSE) {
-            systemExit.exit(0);
+            systemExit.exit();
         }
     }
 
