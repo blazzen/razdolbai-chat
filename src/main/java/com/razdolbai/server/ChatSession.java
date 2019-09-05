@@ -2,6 +2,7 @@ package com.razdolbai.server;
 
 import com.razdolbai.server.commands.CloseCommand;
 import com.razdolbai.server.commands.Command;
+import com.razdolbai.server.exceptions.UnidentifiedUserException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -37,9 +38,12 @@ public class ChatSession implements Session {
                 System.out.printf("Debug: %s %s %s" + System.lineSeparator(), username, timeStamp, message);
             }
             close();
+        } catch (UnidentifiedUserException e) {
+            e.printStackTrace();
+            send("First command should be /chid");
         } catch (Exception e) {
             e.printStackTrace();
-        }// TODO: 2019-09-04 add catch for NotAuthorizedException
+        }
     }
 
     @Override
