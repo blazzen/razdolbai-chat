@@ -1,5 +1,6 @@
 package com.razdolbai.server;
 
+import com.razdolbai.server.history.HistoryAccessObject;
 import com.razdolbai.server.history.saver.Saver;
 import com.razdolbai.server.history.saver.SwitchingFileSaver;
 
@@ -11,7 +12,8 @@ public class ServerLauncher {
         Saver saver = new SwitchingFileSaver();
         Identificator identificator = new Identificator();
         SessionStore sessionStore = new ChatSessionStore();
-        CommandFactory commandFactory = new ChatCommandFactory(parser, sessionStore, saver, identificator);
+        HistoryAccessObject history = new HistoryAccessObject();
+        CommandFactory commandFactory = new ChatCommandFactory(parser, sessionStore, saver, identificator, history);
         SessionFactory sessionFactory = new ChatSessionFactory(commandFactory);
         new Server(sessionFactory, sessionStore).startServer();
     }
