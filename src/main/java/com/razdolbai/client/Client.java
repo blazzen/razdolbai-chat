@@ -2,6 +2,9 @@ package com.razdolbai.client;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 
 public class Client {
 
@@ -9,6 +12,9 @@ public class Client {
     }
 
     public static void main(String[] args) {
+
+        Logger logger = Logger.getLogger("ClientLogger");
+        logger.setLevel(Level.SEVERE);
 
         try (
                 final Socket socket = new Socket("localhost", 8081);
@@ -20,34 +26,19 @@ public class Client {
                                 new BufferedInputStream(socket.getInputStream())));
                 final BufferedReader reader = new BufferedReader(new InputStreamReader(System.in))
         ) {
-
-            registerShutdownHook(socket, out, in, reader);
+            new ShutdownHookCreator().registerShutdownHook(socket, out, in, reader, logger);
             CommandSender commandSender = new CommandSender(out, new SystemExit());
-            InputConsole inputConsole = new InputConsole(commandSender, reader, new InputParser());
+            InputConsole inputConsole = new InputConsole(commandSender, reader, new InputParser(), logger);
 
             while (!Thread.currentThread().isInterrupted()) {
                 inputConsole.readCommand();
             }
 
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.log(Level.SEVERE, "Exception is thrown", e);
         }
 
     }
 
-    private static void registerShutdownHook(Socket socket, PrintWriter out, BufferedReader in, BufferedReader reader) {
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            try {
 
-                in.close();
-                out.close();
-                socket.close();
-                reader.close();
-
-                System.out.println("Successfully closed client");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }));
-    }
 }
