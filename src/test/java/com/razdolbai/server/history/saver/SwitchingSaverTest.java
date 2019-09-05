@@ -68,7 +68,7 @@ public class SwitchingSaverTest {
     }
 
     @Test
-    public void shouldSwitchToNewFileIfPreviousFileSizeIsBiggerThanLimit()  throws IOException {
+    public void shouldSwitchToNewFileIfPreviousFileSizeIsBiggerThanLimit() throws IOException {
         File firstFileToWrite = new File(SwitchingFileSaver.fileNameFormat("history", messageDateTime, 0));
         File secondFileToWrite = new File(SwitchingFileSaver.fileNameFormat("history", messageDateTime, 1));
 
@@ -83,6 +83,27 @@ public class SwitchingSaverTest {
 
         assertThat(reader1.readLine().equals("[" + messageDateTime.toString() + "]" + "test1")).isTrue();
         assertThat(reader2.readLine().equals("[" + messageDateTime.toString() + "]" + "test2")).isTrue();
+
+        reader1.close();
+        reader2.close();
+    }
+
+    @Test
+    public void shouldSwitchToNewFileIfNewDayHasCome() throws IOException {
+        File firstFileToWrite = new File(SwitchingFileSaver.fileNameFormat("history", messageDateTime, 0));
+        File secondFileToWrite = new File(SwitchingFileSaver.fileNameFormat("history", messageDateTime.plusDays(1), 0));
+
+        SwitchingFileSaver sut = new SwitchingFileSaver();
+
+        sut.save("test1", messageDateTime);
+        sut.save("test2", messageDateTime.plusDays(1));
+        sut.close();
+
+        BufferedReader reader1 = new BufferedReader(new FileReader(firstFileToWrite));
+        BufferedReader reader2 = new BufferedReader(new FileReader(secondFileToWrite));
+
+        assertThat(reader1.readLine().equals("[" + messageDateTime.toString() + "]" + "test1")).isTrue();
+        assertThat(reader2.readLine().equals("[" + messageDateTime.plusDays(1).toString() + "]" + "test2")).isTrue();
 
         reader1.close();
         reader2.close();

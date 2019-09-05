@@ -2,6 +2,7 @@ package com.razdolbai.server.history.saver;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 
@@ -49,15 +50,13 @@ public class SwitchingFileSaver extends FileSaver {
 
     @Override
     public void save(String string, LocalDateTime dateTime) throws IOException {
-        if (sizeCounter > sizeLimit ||
-                this.dateTime.getDayOfYear() != dateTime.getDayOfYear() ||
-                this.dateTime.getYear() != dateTime.getYear()) {
+        Boolean isDateChanged = !this.dateTime.toLocalDate().equals(dateTime.toLocalDate());
+        if (sizeCounter > sizeLimit || isDateChanged) {
             sizeCounter = 0;
             switchFile(dateTime);
+            fileCounter = isDateChanged ? 0 : fileCounter++;
         }
-
         sizeCounter += string.getBytes().length;
-
         super.save(string, dateTime);
         this.dateTime = dateTime;
     }
@@ -75,12 +74,8 @@ public class SwitchingFileSaver extends FileSaver {
         }
     }
 
-
     private void switchFile(LocalDateTime dateTime) throws IOException {
         super.close();
-        fileCounter++;
         this.open(dateTime);
     }
-
-
 }

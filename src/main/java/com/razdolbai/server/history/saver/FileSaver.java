@@ -16,9 +16,7 @@ public class FileSaver implements Saver {
 
 
     public FileSaver () {
-
     }
-
 
     protected void open(String filename) throws  FileExistsException, IOException {
         this.isClosed = false;
@@ -41,9 +39,7 @@ public class FileSaver implements Saver {
     @Override
     public void close() {
         if (isClosed) return;
-
         isClosed = true;
-
         out.flush();
         out.close();
     }
