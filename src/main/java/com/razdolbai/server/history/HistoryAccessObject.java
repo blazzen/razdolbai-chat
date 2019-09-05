@@ -28,7 +28,7 @@ public class HistoryAccessObject implements History {
     public List<String> getHistory() {
         List<String> history = null;
         try {
-            readWriteLock.readLock();
+            readWriteLock.readLock().lock();
             history = reader.getHistory();
         } finally {
             readWriteLock.readLock().unlock();
