@@ -7,6 +7,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 
 import static org.fest.assertions.Assertions.*;
@@ -19,7 +20,7 @@ public class SwitchingSaverTest {
     @Before
     public void beforeTest() throws IOException {
 
-        String directoryName = "./resources/History";
+        String directoryName = Paths.get(".","resources", "History").toString();
         File directory = new File(directoryName);
         if (!directory.exists()) {
             directory.mkdirs();
