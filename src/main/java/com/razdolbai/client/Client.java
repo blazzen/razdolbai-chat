@@ -36,12 +36,9 @@ public class Client {
                                         server.getOutputStream())))
         ) {
 
-
-            System.out.println("Accepted");
-
             Thread thread = new Thread(() -> {
                 try {
-                    while (true) {
+                    while (!Thread.currentThread().isInterrupted()) {
                         String inputData = in.readLine();
                         if (inputData != null) {
                             consoleOutput.println(inputData);
@@ -63,7 +60,8 @@ public class Client {
             while (!Thread.currentThread().isInterrupted()) {
                 inputConsole.readCommand();
             }
-
+            consoleOutput.println("CLOSE");
+            consoleOutput.flush();
         } catch (IOException e) {
             logger.log(Level.SEVERE, EXCEPTION_MESSAGE, e);
         }
