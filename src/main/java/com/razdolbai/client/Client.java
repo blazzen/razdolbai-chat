@@ -21,6 +21,7 @@ public class Client {
         Logger logger = Logger.getLogger("ClientLogger");
         logger.setLevel(Level.INFO);
 
+
         try (
                 final Socket socket = new Socket("localhost", 8081);
                 final PrintWriter out = new PrintWriter(
@@ -30,7 +31,7 @@ public class Client {
                         new InputStreamReader(
                                 new BufferedInputStream(socket.getInputStream())));
                 final BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-                final ServerSocket connectionListener = new ServerSocket(666);
+                final ServerSocket connectionListener = new ServerSocket(Integer.parseInt(args[0]));
                 final Socket server = connectionListener.accept();
                 final PrintWriter consoleOutput = new PrintWriter(
                         new OutputStreamWriter(
@@ -48,8 +49,6 @@ public class Client {
 
             thread.start();
 
-            ProcessBuilder processBuilder = new ProcessBuilder();
-            processBuilder.command("echo hello");
             CommandSender commandSender = new CommandSender(out, new SystemExit());
             InputConsole inputConsole = new InputConsole(commandSender, reader, new InputParser(), logger);
 
