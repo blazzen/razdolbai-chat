@@ -1,5 +1,6 @@
 package com.razdolbai.server.history.saver;
 
+import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
 
@@ -14,6 +15,18 @@ public class SwitchingFileSaver extends FileSaver {
     private int fileCounter = 0;
     private final static String name = "history";
     private final static String format = ".txt";
+
+
+    static {
+        File directory = new File("./resources");
+        if(!directory.exists()) {
+            directory.mkdir();
+        }
+        directory = new File("./resources/History");
+        if(!directory.exists()) {
+            directory.mkdir();
+        }
+    }
 
     private LocalDateTime dateTime;
 

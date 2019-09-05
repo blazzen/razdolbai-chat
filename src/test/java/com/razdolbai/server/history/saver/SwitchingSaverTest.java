@@ -15,26 +15,25 @@ import static org.fest.assertions.Assertions.*;
 public class SwitchingSaverTest {
 
     LocalDateTime messageDateTime = null;
-
+    SwitchingFileSaver sut;
     @Before
-    public void beforeTest() {
+    public void beforeTest() throws IOException {
+
         String folder = "./resources/History";
         for(File f : new File(folder).listFiles()) {
             if(!f.isDirectory()) {
                 f.delete();
             }
         }
-
+        sut = new SwitchingFileSaver();
 
         messageDateTime = LocalDateTime.now();
     }
 
     @Test
     public void shouldSaveAndNotSwitchIfLimitWasNotReachedAndSameDate() throws IOException {
-        File file = new File(SwitchingFileSaver.fileNameFormat("history", messageDateTime, 0));
-        file.delete();
+        String filename = SwitchingFileSaver.fileNameFormat("history", messageDateTime,0);
 
-        SwitchingFileSaver sut = new SwitchingFileSaver();
 
         sut.save("test1", messageDateTime);
         sut.save("test2", messageDateTime);
@@ -42,7 +41,6 @@ public class SwitchingSaverTest {
 
 
 
-        String filename = SwitchingFileSaver.fileNameFormat("history", messageDateTime,0);
 
         BufferedReader reader = new BufferedReader(new FileReader(filename));
 
@@ -58,8 +56,8 @@ public class SwitchingSaverTest {
         existedFile.createNewFile();
 
         String filenameToBeCreated = SwitchingFileSaver.fileNameFormat("history", messageDateTime,1);
-        File fileToBeCreated = new File(filenameToBeCreated);
-        fileToBeCreated.delete();
+        //File fileToBeCreated = new File(filenameToBeCreated);
+        //fileToBeCreated.delete();
 
         SwitchingFileSaver sut = new SwitchingFileSaver();
         sut.save("test1", messageDateTime);
