@@ -1,12 +1,14 @@
 package com.razdolbai.server.commands;
 
 import com.razdolbai.server.Identificator;
+import com.razdolbai.server.history.saver.Saver;
 import com.razdolbai.server.Session;
 import com.razdolbai.server.SessionStore;
 import com.razdolbai.server.exceptions.OccupiedNicknameException;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -20,6 +22,7 @@ public class ChangeIdCommandTest {
     private SessionStore mockSessionStore;
     private Session mockSession;
     private ChangeIdCommand testChangeIdCommand;
+    private Saver mockSaver;
     @Before
     public void setup(){
         mockIdentificator = mock(Identificator.class);
@@ -28,33 +31,37 @@ public class ChangeIdCommandTest {
         timestamp = LocalDateTime.now();
         mockSessionStore = mock(SessionStore.class);
         mockSession = mock(Session.class);
-        testChangeIdCommand = new ChangeIdCommand(mockSession,mockIdentificator,newnickname,timestamp,mockSessionStore);
+        mockSaver = mock(Saver.class);
+        testChangeIdCommand = new ChangeIdCommand(mockSession,mockIdentificator,newnickname,timestamp,mockSessionStore,mockSaver);
     }
 
     @Test
-    public void shouldChangeIdTest() throws OccupiedNicknameException {
-        String decoratedMessage = timestamp.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")) + "\n"
-                + oldnickname + " has changed name to " + newnickname + "\n";
+
+    public void shouldChangeIdTest() throws OccupiedNicknameException, IOException {
+        String decoratedMessage = "[" +timestamp.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")) + "] "
+                + oldnickname + " has changed name to " + newnickname;
         when(mockSession.getUsername()).thenReturn(oldnickname);
         testChangeIdCommand.execute();
         verify(mockSession).getUsername();
         verify(mockIdentificator).changeNickname(oldnickname,newnickname);
         verify(mockSession).setUsername(newnickname);
         verify(mockSessionStore).sendToAll(decoratedMessage);
+        verify(mockSaver).save(decoratedMessage,timestamp);
     }
     @Test
-    public void shouldCreateIdTest() throws OccupiedNicknameException {
-        String decoratedMessage = timestamp.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")) + "\n"
-                + newnickname + " joined the chat" + "\n";
+    public void shouldCreateIdTest() throws OccupiedNicknameException, IOException {
+        String decoratedMessage = "[" + timestamp.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")) + "] "
+                + newnickname + " joined the chat";
         when(mockSession.getUsername()).thenReturn(null);
         testChangeIdCommand.execute();
         verify(mockSession).getUsername();
         verify(mockIdentificator).changeNickname(null,newnickname);
         verify(mockSession).setUsername(newnickname);
         verify(mockSessionStore).sendToAll(decoratedMessage);
+        verify(mockSaver).save(decoratedMessage,timestamp);
     }
     @Test(expected = OccupiedNicknameException.class )
-    public void shouldThrowException() throws OccupiedNicknameException{
+    public void shouldThrowException() throws OccupiedNicknameException, IOException{
         when(mockSession.getUsername()).thenReturn(oldnickname);
         doThrow(new OccupiedNicknameException()).when(mockIdentificator).changeNickname(oldnickname,newnickname);
         testChangeIdCommand.execute();
