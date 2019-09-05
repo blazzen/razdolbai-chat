@@ -7,19 +7,14 @@ import java.io.InputStreamReader;
 class InputConsole {
     private Proxy proxy;
 
-
     InputConsole(Proxy proxy) {
         this.proxy = proxy;
     }
 
     void readCommand() throws IOException {
-
-        BufferedReader reader =
-                new BufferedReader(new InputStreamReader(System.in));
-
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 
         while (!Thread.currentThread().isInterrupted()) {
-
             String input = reader.readLine();
 
             InputParser parser = new InputParser();
@@ -27,10 +22,6 @@ class InputConsole {
             if (command != null) {
                 proxy.send(command);
             }
-
-
         }
-
     }
-
 }

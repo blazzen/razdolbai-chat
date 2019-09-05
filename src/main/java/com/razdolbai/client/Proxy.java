@@ -1,24 +1,23 @@
 package com.razdolbai.client;
 
 
+import com.razdolbai.common.CommandType;
+
 import java.io.PrintWriter;
 
 class Proxy {
     private static final String DELIMITER = "\0";
+
     private PrintWriter out;
     private SystemExit systemExit;
-
-    private static final String CLOSE = "/close";
 
     Proxy(PrintWriter out, SystemExit systemExit) {
         this.out = out;
         this.systemExit = systemExit;
-
     }
 
     void send(Command command) {
-
-        String result = "type:" + command.getCommandType();
+        String result = "type:" + command.getType().getValue();
         if (!command.getMessage().isEmpty()) {
             result = addMessage(command, result);
         }
@@ -26,7 +25,7 @@ class Proxy {
         out.println(result);
         out.flush();
 
-        if (command.getCommandType().equals(CLOSE)) {
+        if (command.getType() == CommandType.CLOSE) {
             systemExit.exit(0);
         }
     }
@@ -37,6 +36,4 @@ class Proxy {
         result += "msg:" + command.getMessage();
         return result;
     }
-
-
 }

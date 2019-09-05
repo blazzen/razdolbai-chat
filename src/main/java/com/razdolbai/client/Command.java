@@ -1,16 +1,18 @@
 package com.razdolbai.client;
 
 
+import com.razdolbai.common.CommandType;
+
 class Command {
-    private String commandType;
+    private CommandType commandType;
     private String message;
 
-    Command(String commandType, String message) {
+    Command(CommandType commandType, String message) {
         this.commandType = commandType;
         this.message = message;
     }
 
-    String getCommandType() {
+    CommandType getType() {
         return commandType;
     }
 
