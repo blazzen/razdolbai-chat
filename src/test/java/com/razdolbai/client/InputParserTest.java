@@ -9,15 +9,16 @@ import java.io.PrintStream;
 import static org.fest.assertions.Assertions.assertThat;
 
 public class InputParserTest {
-    private static final String VERY_LONG_LINE = "/snd testtesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttest";
-    private String[] existingCommands = {"/snd", "/hist", "/chid", "/close"};
+
+    private static final String VERY_LONG_LINE = "ettesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttest";
+    private static final String NOT_LONG_ENOUGH_LINE = "etesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttest";
     private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
 
     private InputParser sut;
 
     @Before
     public void setUp() {
-        sut = new InputParser(existingCommands);
+        sut = new InputParser();
         System.setOut(new PrintStream(outContent));
     }
 
@@ -41,7 +42,7 @@ public class InputParserTest {
     @Test
     public void shouldWriteErrorMessageIfCommandIsTooLong() {
 
-        sut.parse("/snd "+ VERY_LONG_LINE);
+        sut.parse("/snd " + VERY_LONG_LINE);
 
         assertThat(outContent.toString()).contains("Message is too long, try again");
 
@@ -71,6 +72,15 @@ public class InputParserTest {
 
         assertThat(result.getCommandType()).isEqualTo("/snd");
         assertThat(result.getMessage()).isEqualTo("testMsg");
+    }
+
+    @Test
+    public void shouldReturnCommandIfMessageIsMaxLengthAndCommandTypeIsPassed() {
+
+        Command result = sut.parse("/snd " + NOT_LONG_ENOUGH_LINE);
+
+        assertThat(result.getCommandType()).isEqualTo("/snd");
+        assertThat(result.getMessage()).isEqualTo(NOT_LONG_ENOUGH_LINE);
     }
 
 
