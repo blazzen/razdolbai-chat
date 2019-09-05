@@ -32,12 +32,16 @@ public class ChatSession implements Session {
 
     @Override
     public void run() {
-        try {
+        try (
+                BufferedReader myIn = socketIn;
+                PrintWriter myOut = socketOut;
+                Socket mySocket = socket
+        ) {
             while (!isClosed) {
-                String message = socketIn.readLine();
+                String message = myIn.readLine();
                 processRequest(message);
             }
-        } catch (Exception e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -50,21 +54,7 @@ public class ChatSession implements Session {
 
     @Override
     public void close() {
-        try {
-            isClosed = true;
-            if (socketIn != null) {
-                socketIn.close();
-            }
-            if (socketOut != null) {
-                socketOut.close();
-            }
-            if (socket != null) {
-                socket.close();
-            }
-        } catch (IOException e) {
-            System.out.printf("Debug: error in closing session %s" + System.lineSeparator(), username);
-            e.printStackTrace();
-        }
+        isClosed = true;
         System.out.printf("Debug: %s session closed" + System.lineSeparator(), username);
     }
 

@@ -24,6 +24,7 @@ public class Server {
                 sessionStore.register(session);
             }
         } catch (IOException e) {
+            System.out.println("Error in creating session");
             e.printStackTrace();
         }
     }
@@ -32,13 +33,13 @@ public class Server {
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             if (connectionListener != null) {
                 try {
-                    connectionListener.close();
+                    sessionStore.sendToAll("Server died ;<");
                     sessionStore.closeAll();
+                    connectionListener.close();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
-            System.out.println("Server closed");
         }));
     }
 }
