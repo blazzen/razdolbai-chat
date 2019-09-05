@@ -17,10 +17,8 @@ public class HistoryCommand implements Command {
     @Override
     public void execute() {
         try {
-            history = new HistoryAccessObject();
-            List<String> list = history.getHistory();
-            for ( String mess: list
-                 ) {
+            List<String> historyList = new HistoryAccessObject().getHistory();
+            for (String mess : historyList) {
                 session.send(mess);
             }
         } catch (IOException e) {
