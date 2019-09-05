@@ -31,13 +31,4 @@ public class SwitchingFileReader implements Reader {
             }
         }
     }
-
-    public static void main(String[] args) {
-        /*
-        for(String s : res) {
-            System.out.println(s);
-        }
-        */
-
-    }
 }
