@@ -55,6 +55,12 @@
         <artifactId>pitest-maven</artifactId>
         <version>1.4.5</version>
         <configuration>
+          <targetClasses>
+            <param>com.razdolbai.*</param>
+          </targetClasses>
+          <targetTests>
+            <param>com.razdolbai.*</param>
+          </targetTests>
         </configuration>
         <executions>
           <execution>
