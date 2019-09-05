@@ -1,5 +1,8 @@
 package com.razdolbai.server;
 
+import com.razdolbai.common.CommandType;
+import com.razdolbai.server.commands.Command;
+
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;

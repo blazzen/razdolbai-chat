@@ -1,5 +1,6 @@
 package com.razdolbai.server;
 
+import com.razdolbai.common.CommandType;
 import com.razdolbai.server.commands.*;
 
 import java.util.Map;
@@ -24,22 +25,18 @@ public class ChatCommandFactory implements CommandFactory {
     public Command createCommand(Session session, String message, String timestamp) {
         Map<String, String> fieldMap = parser.parse(message);
         String type = fieldMap.get("type");
-        switch (type) {
-            case "/hist": {
+        CommandType commandType = CommandType.fromString(type);
+        switch (commandType) {
+            case HIST:
                 return createHistCommand(session);
-            }
-            case "/snd": {
+            case SEND:
                 return createSendCommand(session, fieldMap, timestamp);
-            }
-            case "/chid": {
+            case CHID:
                 return createChangeIdCommand(session, fieldMap, timestamp);
-            }
-            case "/close": {
+            case CLOSE:
                 return createCloseCommand(session);
-            }
-            default: {
+            default:
                 throw new IllegalArgumentException("Unknown command type: " + type);
-            }
         }
     }
 
