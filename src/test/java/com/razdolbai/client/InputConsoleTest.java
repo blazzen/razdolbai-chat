@@ -20,21 +20,20 @@ public class InputConsoleTest {
 
         sut = new InputConsole(commandSenderMock, readerMock, inputParserMock);
 
-
     }
 
     @Test
     public void test() throws IOException {
 
-        when(readerMock.readLine()).thenReturn("/snd testtest");
+        when(readerMock.readLine()).thenReturn(CommandType.SEND.getValue() + " testtest");
         Command command = new Command(CommandType.SEND, "testtest");
-        when(inputParserMock.parse("/snd testtest")).thenReturn(command);
+        when(inputParserMock.parse(CommandType.SEND.getValue() + " testtest")).thenReturn(command);
         doNothing().when(commandSenderMock).send(command);
 
         sut.readCommand();
 
         verify(commandSenderMock).send(command);
-        verify(inputParserMock).parse("/snd testtest");
+        verify(inputParserMock).parse(CommandType.SEND.getValue() + " testtest");
 
 
     }

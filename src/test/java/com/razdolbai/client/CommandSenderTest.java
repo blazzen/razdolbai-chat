@@ -17,6 +17,7 @@ public class CommandSenderTest {
 
     @Before
     public void setUp() {
+
         sut = new CommandSender(printWriterMock, systemExitMock);
 
     }
@@ -25,7 +26,6 @@ public class CommandSenderTest {
     public void shouldAddMessageIfMessageIsPresent() {
         doNothing().when(printWriterMock).println("type:" + CommandType.SEND.getValue() + "\0msg:testtest");
         doNothing().when(printWriterMock).flush();
-
         Command command = new Command(CommandType.SEND, "testtest");
 
         sut.send(command);
@@ -40,7 +40,6 @@ public class CommandSenderTest {
 
         doNothing().when(printWriterMock).println("type:" + CommandType.HIST.getValue());
         doNothing().when(printWriterMock).flush();
-
         Command command = new Command(CommandType.HIST, "");
 
         sut.send(command);
