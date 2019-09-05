@@ -1,12 +1,15 @@
 package com.razdolbai.client;
 
 import java.io.*;
+import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
 public class Client {
+
+    private static final String EXCEPTION_MESSAGE = "Exception is thrown";
 
     private Client() {
     }
@@ -24,8 +27,35 @@ public class Client {
                 final BufferedReader in = new BufferedReader(
                         new InputStreamReader(
                                 new BufferedInputStream(socket.getInputStream())));
-                final BufferedReader reader = new BufferedReader(new InputStreamReader(System.in))
+                final BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+                final ServerSocket connectionListener = new ServerSocket(666);
+                final Socket server = connectionListener.accept();
+                final PrintWriter consoleOutput = new PrintWriter(
+                        new OutputStreamWriter(
+                                new BufferedOutputStream(
+                                        server.getOutputStream())))
         ) {
+
+
+            System.out.println("Accepted");
+
+            Thread thread = new Thread(() -> {
+                try {
+                    while (true) {
+                        String inputData = in.readLine();
+                        if (inputData != null) {
+                            consoleOutput.println(inputData);
+                            consoleOutput.flush();
+                        }
+                    }
+                } catch (IOException e) {
+                    logger.log(Level.SEVERE, EXCEPTION_MESSAGE, e);
+                }
+            });
+
+            thread.start();
+
+
             new ShutdownHookCreator().registerShutdownHook(socket, out, in, reader, logger);
             CommandSender commandSender = new CommandSender(out, new SystemExit());
             InputConsole inputConsole = new InputConsole(commandSender, reader, new InputParser(), logger);
@@ -35,7 +65,7 @@ public class Client {
             }
 
         } catch (IOException e) {
-            logger.log(Level.SEVERE, "Exception is thrown", e);
+            logger.log(Level.SEVERE, EXCEPTION_MESSAGE, e);
         }
 
     }
