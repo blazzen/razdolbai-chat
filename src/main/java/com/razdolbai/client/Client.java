@@ -36,6 +36,14 @@ public class Client {
                                         server.getOutputStream())))
         ) {
 
+            // todo delete hook
+            // thread to new class
+
+
+            new ShutdownHookCreator().registerShutdownHook(socket, out, in, reader, logger, consoleOutput);
+            CommandSender commandSender = new CommandSender(out, new SystemExit());
+            InputConsole inputConsole = new InputConsole(commandSender, reader, new InputParser(), logger);
+
             Thread thread = new Thread(() -> {
                 try {
                     while (!Thread.currentThread().isInterrupted()) {
@@ -51,10 +59,6 @@ public class Client {
             });
 
             thread.start();
-
-            new ShutdownHookCreator().registerShutdownHook(socket, out, in, reader, logger);
-            CommandSender commandSender = new CommandSender(out, new SystemExit());
-            InputConsole inputConsole = new InputConsole(commandSender, reader, new InputParser(), logger);
 
             while (!Thread.currentThread().isInterrupted()) {
                 inputConsole.readCommand();
