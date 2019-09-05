@@ -14,18 +14,23 @@ import static org.fest.assertions.Assertions.*;
 
 public class SwitchingSaverTest {
 
-    LocalDateTime messageDateTime = null;
-    SwitchingFileSaver sut;
+    private LocalDateTime messageDateTime = null;
+
     @Before
     public void beforeTest() throws IOException {
 
-        String folder = "./resources/History";
-        for(File f : new File(folder).listFiles()) {
-            if(!f.isDirectory()) {
-                f.delete();
+        String directoryName = "./resources/History";
+        File directory = new File(directoryName);
+        if (!directory.exists()) {
+            directory.mkdirs();
+        }
+        else {
+            for (File f : directory.listFiles()) {
+                if (!f.isDirectory()) {
+                    f.delete();
+                }
             }
         }
-        sut = new SwitchingFileSaver();
 
         messageDateTime = LocalDateTime.now();
     }
@@ -34,19 +39,15 @@ public class SwitchingSaverTest {
     public void shouldSaveAndNotSwitchIfLimitWasNotReachedAndSameDate() throws IOException {
         String filename = SwitchingFileSaver.fileNameFormat("history", messageDateTime,0);
 
-
+        SwitchingFileSaver sut = new SwitchingFileSaver();
         sut.save("test1", messageDateTime);
         sut.save("test2", messageDateTime);
         sut.close();
 
-
-
-
         BufferedReader reader = new BufferedReader(new FileReader(filename));
-
         assertThat(reader.readLine().equals("[" + messageDateTime.toString() + "]" + "test1")).isTrue();
         assertThat(reader.readLine().equals("[" + messageDateTime.toString() + "]" + "test2")).isTrue();
-
+        reader.close();
     }
 
     @Test
@@ -55,24 +56,21 @@ public class SwitchingSaverTest {
         existedFile.delete();
         existedFile.createNewFile();
 
-        String filenameToBeCreated = SwitchingFileSaver.fileNameFormat("history", messageDateTime,1);
-        //File fileToBeCreated = new File(filenameToBeCreated);
-        //fileToBeCreated.delete();
+        File fileToBeCreated = new File(SwitchingFileSaver.fileNameFormat("history", messageDateTime,1));
 
         SwitchingFileSaver sut = new SwitchingFileSaver();
         sut.save("test1", messageDateTime);
         sut.close();
 
-        BufferedReader reader = new BufferedReader(new FileReader(filenameToBeCreated));
+        BufferedReader reader = new BufferedReader(new FileReader(fileToBeCreated));
         assertThat(reader.readLine().equals("[" + messageDateTime.toString() + "]" + "test1")).isTrue();
+        reader.close();
     }
 
     @Test
     public void shouldSwitchToNewFileIfPreviousFileSizeIsBiggerThanLimit()  throws IOException {
         File firstFileToWrite = new File(SwitchingFileSaver.fileNameFormat("history", messageDateTime, 0));
-        firstFileToWrite.delete();
         File secondFileToWrite = new File(SwitchingFileSaver.fileNameFormat("history", messageDateTime, 1));
-        secondFileToWrite.delete();
 
         SwitchingFileSaver sut = new SwitchingFileSaver(1);
 
@@ -85,5 +83,8 @@ public class SwitchingSaverTest {
 
         assertThat(reader1.readLine().equals("[" + messageDateTime.toString() + "]" + "test1")).isTrue();
         assertThat(reader2.readLine().equals("[" + messageDateTime.toString() + "]" + "test2")).isTrue();
+
+        reader1.close();
+        reader2.close();
     }
 }

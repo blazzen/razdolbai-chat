@@ -18,13 +18,9 @@ public class SwitchingFileSaver extends FileSaver {
 
 
     static {
-        File directory = new File("./resources");
+        File directory = new File("./resources/History");
         if(!directory.exists()) {
-            directory.mkdir();
-        }
-        directory = new File("./resources/History");
-        if(!directory.exists()) {
-            directory.mkdir();
+            directory.mkdirs();
         }
     }
 
