@@ -2,7 +2,9 @@ package com.razdolbai.server;
 
 import com.razdolbai.common.CommandType;
 import com.razdolbai.server.commands.*;
+import com.razdolbai.server.history.saver.Saver;
 
+import java.time.LocalDateTime;
 import java.util.Map;
 
 public class ChatCommandFactory implements CommandFactory {
@@ -22,7 +24,7 @@ public class ChatCommandFactory implements CommandFactory {
     }
 
     @Override
-    public Command createCommand(Session session, String message, String timestamp) {
+    public Command createCommand(Session session, String message, LocalDateTime timestamp) {
         Map<String, String> fieldMap = parser.parse(message);
         String type = fieldMap.get("type");
         CommandType commandType = CommandType.fromString(type);
@@ -48,12 +50,12 @@ public class ChatCommandFactory implements CommandFactory {
         return new CloseCommand(session, sessionStore);
     }
 
-    private SendCommand createSendCommand(Session session, Map<String, String> fieldMap, String timestamp) {
+    private SendCommand createSendCommand(Session session, Map<String, String> fieldMap, LocalDateTime timestamp) {
         String message = fieldMap.get("msg");
         return new SendCommand(session, sessionStore, message, saver, timestamp);
     }
 
-    private ChangeIdCommand createChangeIdCommand(Session session, Map<String, String> fieldMap, String timestamp) {
+    private ChangeIdCommand createChangeIdCommand(Session session, Map<String, String> fieldMap, LocalDateTime timestamp) {
         String newNickname = fieldMap.get("msg");
         return new ChangeIdCommand(session, identificator, newNickname, timestamp, sessionStore);
     }

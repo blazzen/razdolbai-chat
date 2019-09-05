@@ -32,7 +32,7 @@ public class ChatSession implements Session {
             Command command = null;
             while (!(command instanceof CloseCommand)) {
                 String message = socketIn.readLine();
-                String timeStamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+                LocalDateTime timeStamp = LocalDateTime.now();
                 command = commandFactory.createCommand(this, message, timeStamp);
                 command.execute(); // command --> session.send(msg)
                 System.out.printf("Debug: %s %s %s" + System.lineSeparator(), username, timeStamp, message);
