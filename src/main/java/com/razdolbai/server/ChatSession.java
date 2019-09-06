@@ -30,9 +30,7 @@ public class ChatSession implements Session {
     @Override
     public void run() {
         try (
-                BufferedReader myIn = socketIn;
-                PrintWriter myOut = socketOut;
-                Socket mySocket = socket
+                BufferedReader myIn = socketIn
         ) {
             while (!isClosed) {
                 String message = myIn.readLine();
@@ -60,6 +58,7 @@ public class ChatSession implements Session {
         return username;
     }
 
+    @Override
     public void setUsername(String username) {
         this.username = username;
     }
