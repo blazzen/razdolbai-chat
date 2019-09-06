@@ -1,5 +1,6 @@
 package com.razdolbai.server.commands;
 
+import com.razdolbai.server.Decorator;
 import com.razdolbai.server.Session;
 import com.razdolbai.server.SessionStore;
 import com.razdolbai.server.exceptions.UnidentifiedUserException;
@@ -15,7 +16,7 @@ public class SendCommand implements Command {
     private final String message;
     private final Saver saver;
     private final LocalDateTime timestamp;
-
+    private static Decorator stringMessage = new Decorator();
     public SendCommand(Session session, SessionStore sessionStore, String message, Saver saver, LocalDateTime timestamp) {
         this.session = session;
         this.sessionStore = sessionStore;
@@ -27,15 +28,9 @@ public class SendCommand implements Command {
     @Override
     public void execute() throws UnidentifiedUserException, IOException {
         checkUsername();
-        String decoratedMessage = decorate(message);
+        String decoratedMessage = Decorator.decorate(message,timestamp,session.getUsername());
         sessionStore.sendToAll(decoratedMessage);
         saver.save(decoratedMessage, timestamp);
-    }
-
-    private String decorate(String message) {
-        return "[" + timestamp.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")) + "] " +
-                session.getUsername() + ": " +
-                message;
     }
 
     private void checkUsername() throws UnidentifiedUserException {

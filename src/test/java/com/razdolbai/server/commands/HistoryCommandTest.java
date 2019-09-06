@@ -1,5 +1,6 @@
 package com.razdolbai.server.commands;
 
+import com.razdolbai.server.Decorator;
 import com.razdolbai.server.Session;
 import com.razdolbai.server.history.HistoryAccessObject;
 import org.junit.Before;
@@ -16,13 +17,11 @@ public class HistoryCommandTest {
     private List<String> testHistory;
     private HistoryCommand testHistoryCommand;
     private String historyContent;
-    private String message;
     @Before
     public void setup(){
         mockSession = mock(Session.class);
         mockHistoryAccessObject = mock(HistoryAccessObject.class);
-        historyContent = "James has joined the chat";
-        message = "Chat history: ";
+        historyContent = Decorator.joinMessage("James");
         testHistory = new ArrayList<String>();
         testHistory.add(historyContent);
         testHistoryCommand = new HistoryCommand(mockSession, mockHistoryAccessObject);
@@ -31,7 +30,7 @@ public class HistoryCommandTest {
     public void shouldExecuteHistoryCommand(){
         when(mockHistoryAccessObject.getHistory()).thenReturn(testHistory);
         testHistoryCommand.execute();
-        verify(mockSession).send(message);
+        verify(mockSession).send(Decorator.getChatHistoryMessage());
         verify(mockHistoryAccessObject).getHistory();
         verify(mockSession).send(historyContent);
     }
