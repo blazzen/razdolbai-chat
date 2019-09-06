@@ -39,7 +39,6 @@ public class SwitchingSaverTest {
     }
 
 
-    @Ignore
     @Test
     public void shouldSaveAndNotSwitchIfLimitWasNotReachedAndSameDate() throws IOException {
         String filename = SwitchingFileSaver.fileNameFormat("history", messageDateTime,0);
@@ -55,7 +54,6 @@ public class SwitchingSaverTest {
         reader.close();
     }
 
-    @Ignore
     @Test
     public void shouldCreateNewFileIfFileAlreadyExists() throws IOException {
         File existedFile = new File(SwitchingFileSaver.fileNameFormat("history", messageDateTime, 0));
@@ -73,7 +71,6 @@ public class SwitchingSaverTest {
         reader.close();
     }
 
-    @Ignore
     @Test
     public void shouldSwitchToNewFileIfPreviousFileSizeIsBiggerThanLimit() throws IOException {
         File firstFileToWrite = new File(SwitchingFileSaver.fileNameFormat("history", messageDateTime, 0));
@@ -94,8 +91,7 @@ public class SwitchingSaverTest {
         reader1.close();
         reader2.close();
     }
-    
-    @Ignore
+
     @Test
     public void shouldSwitchToNewFileIfNewDayHasCome() throws IOException {
         File firstFileToWrite = new File(SwitchingFileSaver.fileNameFormat("history", messageDateTime, 0));

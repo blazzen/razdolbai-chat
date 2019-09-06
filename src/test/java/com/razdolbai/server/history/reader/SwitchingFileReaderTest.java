@@ -1,6 +1,7 @@
 package com.razdolbai.server.history.reader;
 
 import com.razdolbai.server.history.saver.SwitchingFileSaver;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -41,13 +42,11 @@ public class SwitchingFileReaderTest {
         sut = new SwitchingFileReader();
     }
 
-    @Ignore
     @Test
     public void shouldReadFromOneFile() throws IOException {
         SwitchingFileSaver saver = new SwitchingFileSaver();
         String message = "test";
         String message1 = "test1";
-
 
         saver.save(message, messageDateTime);
         saver.save(message1, messageDateTime);
@@ -56,12 +55,10 @@ public class SwitchingFileReaderTest {
         List<String> history = sut.getHistory();
 
         assertThat(history.size()).isEqualTo(2);
-
         assertThat(history.get(0)).isEqualTo(message);
         assertThat(history.get(1)).isEqualTo(message1);
     }
 
-    @Ignore
     @Test
     public void shouldReadFromMultipleFiles() throws IOException {
         SwitchingFileSaver saver = new SwitchingFileSaver(5);
@@ -72,14 +69,12 @@ public class SwitchingFileReaderTest {
         saver.save(message1, messageDateTime);
         saver.close();
 
-
         List<String> history = sut.getHistory();
         assertThat(history.get(0)).isEqualTo(message);
         assertThat(history.get(1)).isEqualTo(message1);
     }
 
 
-    @Ignore
     @Test
     public void shouldReadRecursively() throws IOException{
         SwitchingFileSaver saver = new SwitchingFileSaver(5);
@@ -94,7 +89,6 @@ public class SwitchingFileReaderTest {
 
         File innerDirectory = new File("./resources/History/tmpdir");
         innerDirectory.mkdir();
-
         File lastFile = new File(SwitchingFileSaver.fileNameFormat("history", messageDateTime.plusDays(1), 0));
         lastFile.renameTo(new File("./resources/History/tmpdir/" + lastFile.getName()));
 
@@ -106,9 +100,23 @@ public class SwitchingFileReaderTest {
 
         new File("./resources/History/tmpdir/" + lastFile.getName()).delete();
         innerDirectory.delete();
-
     }
 
+    @After
+    public void afterTest() {
+        String directoryName = Paths.get(".","resources", "History").toString();
+        File directory = new File(directoryName);
+        if (!directory.exists()) {
+            directory.mkdirs();
+        }
+        else {
+            for (File f : directory.listFiles()) {
+                if (!f.isDirectory()) {
+                    f.delete();
+                }
+            }
+        }
+    }
 
 
 }
