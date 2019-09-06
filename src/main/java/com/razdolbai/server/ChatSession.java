@@ -1,18 +1,15 @@
 package com.razdolbai.server;
 
-import com.razdolbai.server.commands.CloseCommand;
 import com.razdolbai.server.commands.Command;
 import com.razdolbai.server.exceptions.ChatException;
 import com.razdolbai.server.exceptions.OccupiedNicknameException;
 import com.razdolbai.server.exceptions.UnidentifiedUserException;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 public class ChatSession implements Session {
     private String username;
@@ -32,12 +29,14 @@ public class ChatSession implements Session {
 
     @Override
     public void run() {
-        try {
+        try (
+                BufferedReader myIn = socketIn
+        ) {
             while (!isClosed) {
-                String message = socketIn.readLine();
+                String message = myIn.readLine();
                 processRequest(message);
             }
-        } catch (Exception e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -50,22 +49,8 @@ public class ChatSession implements Session {
 
     @Override
     public void close() {
-        try {
-            isClosed = true;
-            if (socketIn != null) {
-                socketIn.close();
-            }
-            if (socketOut != null) {
-                socketOut.close();
-            }
-            if (socket != null) {
-                socket.close();
-            }
-        } catch (IOException e) {
-            System.out.printf("Debug: error in closing session %s" + System.lineSeparator(), username);
-            e.printStackTrace();
-        }
-        System.out.printf("Debug: %s session closed" + System.lineSeparator(), username);
+        isClosed = true;
+        System.out.printf("Debug: %s session closed%n", username);
     }
 
     @Override
@@ -73,7 +58,7 @@ public class ChatSession implements Session {
         return username;
     }
 
-    // will be set by ChIdCommand
+    @Override
     public void setUsername(String username) {
         this.username = username;
     }
@@ -82,7 +67,7 @@ public class ChatSession implements Session {
         LocalDateTime timeStamp = LocalDateTime.now();
         Command command = commandFactory.createCommand(this, message, timeStamp);
         try {
-            command.execute(); // command --> session.send(msg)
+            command.execute();
         } catch (UnidentifiedUserException e) {
             processException(e, "First command should be /chid");
         } catch (OccupiedNicknameException e) {
@@ -90,7 +75,7 @@ public class ChatSession implements Session {
         } catch (ChatException e) {
             processException(e, "Some error has occurred");
         }
-        System.out.printf("Debug: %s %s %s" + System.lineSeparator(), username, timeStamp, message);
+        System.out.printf("Debug: %s %s %s%n", username, timeStamp, message);
     }
 
     private void processException(Exception e, String message) {

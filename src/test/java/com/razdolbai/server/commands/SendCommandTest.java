@@ -29,7 +29,7 @@ public class SendCommandTest {
     @Test
     public void shouldSendCommand() throws UnidentifiedUserException, IOException {
         final String message = "HI WORLD!";
-        final String decoratedMessage = timestamp.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")) + "\n" + username + "\n" + message + "\n";
+        final String decoratedMessage = "[" + timestamp.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")) + "] " + username + ": " + message;
         SendCommand testSendCommand = new SendCommand(mockSession,mockSessionStore,message,mockSaver,timestamp);
         when(mockSession.getUsername()).thenReturn(username);
         testSendCommand.execute();

@@ -1,10 +1,12 @@
 package com.razdolbai.common;
 
+
 public enum CommandType {
     SEND("/snd"),
     HIST("/hist"),
     CHID("/chid"),
-    CLOSE("/close");
+    CLOSE("/close"),
+    UNKNOWN("");
 
     private String command;
 
@@ -22,6 +24,6 @@ public enum CommandType {
                 return commandType;
             }
         }
-        throw new IllegalArgumentException("Unknown command: " + command);
+        return UNKNOWN;
     }
 }
