@@ -45,8 +45,7 @@ public class Client {
             logger.addHandler(handler);
             logger.log(Level.INFO, "Client started");
 
-            Thread thread = new Thread(() -> new OutputConsoleWriter(consoleOutput, in, logger).run());
-
+            Thread thread = new Thread(new OutputConsoleWriter(consoleOutput, in, logger));
             thread.start();
 
             CommandSender commandSender = new CommandSender(out, new SystemExit());
