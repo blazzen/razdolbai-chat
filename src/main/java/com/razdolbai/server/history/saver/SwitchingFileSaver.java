@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 
 /**
  * File Saver which switches file on date changing or limit exceeding
- * File size limit - 2^21 messages in 2-byte encoding 150 symbols per each
+ * Default size limit - 30000 symbols (about one file in 5 minutes)
  */
 public class SwitchingFileSaver extends FileSaver {
     private final int sizeLimit;
@@ -18,7 +18,8 @@ public class SwitchingFileSaver extends FileSaver {
     private final static String pathname = Paths.get(".","resources", "History").toString();
     private final static String name = "history";
     private final static String format = ".txt";
-    private final static int defaultSizeLimit = 2 * 150 * 2097152;
+    private final static int defaultSizeLimit = 30000;
+    //about one file per 5 minute
     private final int dateTimeSize;
 
 

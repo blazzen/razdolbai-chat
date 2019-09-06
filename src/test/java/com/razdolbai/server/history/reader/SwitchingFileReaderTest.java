@@ -1,6 +1,7 @@
 package com.razdolbai.server.history.reader;
 
 import com.razdolbai.server.history.saver.SwitchingFileSaver;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -21,6 +22,18 @@ public class SwitchingFileReaderTest {
     private LocalDateTime messageDateTime = null;
     private SwitchingFileReader sut;
 
+
+    private static void cleanRecursivelyDFS(File directory) {
+        for(File currentFile: directory.listFiles()) {
+            if(!currentFile.exists()) return;
+            if(currentFile.isDirectory()) {
+                cleanRecursivelyDFS(currentFile);
+            } else {
+                currentFile.delete();
+            }
+        }
+    }
+
     @Before
     public void beforeTest() throws IOException {
 
@@ -30,15 +43,16 @@ public class SwitchingFileReaderTest {
             directory.mkdirs();
         }
         else {
-            for (File f : directory.listFiles()) {
-                if (!f.isDirectory()) {
-                    f.delete();
-                }
-            }
+            cleanRecursivelyDFS(new File("./resources"));
         }
 
         messageDateTime = LocalDateTime.now();
         sut = new SwitchingFileReader();
+    }
+
+    @After
+    public void afterTest() throws  IOException {
+        cleanRecursivelyDFS(new File("./resources"));
     }
 
 
@@ -54,6 +68,9 @@ public class SwitchingFileReaderTest {
         saver.close();
 
         List<String> history = sut.getHistory();
+        for(String s : history) {
+            System.out.println(s);
+        }
 
         assertThat(history.size()).isEqualTo(2);
 
