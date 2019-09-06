@@ -1,5 +1,6 @@
 package com.razdolbai.server.commands;
 
+import com.razdolbai.server.Decorator;
 import com.razdolbai.server.Identificator;
 import com.razdolbai.server.Session;
 import com.razdolbai.server.SessionStore;
@@ -8,7 +9,6 @@ import com.razdolbai.server.history.saver.Saver;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 public class ChangeIdCommand implements Command {
     private final Session session;
@@ -17,7 +17,6 @@ public class ChangeIdCommand implements Command {
     private final LocalDateTime timestamp;
     private final SessionStore sessionStore;
     private final Saver saver;
-
     public ChangeIdCommand(Session session, Identificator identificator, String newNickname,
                            LocalDateTime timestamp, SessionStore sessionStore, Saver saver) {
         this.session = session;
@@ -39,11 +38,11 @@ public class ChangeIdCommand implements Command {
     private void sendChangedNicknameMessage(String oldNickname, String newNickname) throws IOException {
         String message = "";
         if (oldNickname == null) {
-            message = newNickname + " joined the chat";
+            message = Decorator.joinMessage(newNickname);
         } else {
-            message = oldNickname + " has changed name to " + newNickname;
+            message = Decorator.changeNameMessage(oldNickname, newNickname);
         }
-        String decoratedMessage = "[" + timestamp.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")) + "] " + message;
+        String decoratedMessage = Decorator.decorate(message, timestamp);
         sessionStore.sendToAll(decoratedMessage);
         saver.save(decoratedMessage, timestamp);
     }

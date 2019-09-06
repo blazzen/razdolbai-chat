@@ -1,4 +1,5 @@
 package com.razdolbai.server.commands;
+import com.razdolbai.server.Decorator;
 import com.razdolbai.server.history.saver.Saver;
 import com.razdolbai.server.Session;
 import com.razdolbai.server.SessionStore;
@@ -29,7 +30,7 @@ public class SendCommandTest {
     @Test
     public void shouldSendCommand() throws UnidentifiedUserException, IOException {
         final String message = "HI WORLD!";
-        final String decoratedMessage = "[" + timestamp.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")) + "] " + username + ": " + message;
+        final String decoratedMessage = Decorator.decorate(message,timestamp,username);
         SendCommand testSendCommand = new SendCommand(mockSession,mockSessionStore,message,mockSaver,timestamp);
         when(mockSession.getUsername()).thenReturn(username);
         testSendCommand.execute();
