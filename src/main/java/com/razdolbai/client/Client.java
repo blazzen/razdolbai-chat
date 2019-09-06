@@ -21,7 +21,6 @@ public class Client {
         Logger logger = Logger.getLogger("ClientLogger");
         logger.setLevel(Level.INFO);
 
-
         try (
                 final Socket socket = new Socket("localhost", 8081);
                 final PrintWriter out = new PrintWriter(
