@@ -9,6 +9,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.net.SocketException;
 import java.time.LocalDateTime;
 
 public class ChatSession implements Session {
@@ -37,12 +38,13 @@ public class ChatSession implements Session {
                 processRequest(message);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            //TODO add logger
         }
     }
 
     @Override
     public void send(String message) {
+//            e.printStackTrace();
         socketOut.println(message);
         socketOut.flush();
     }
