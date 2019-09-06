@@ -28,6 +28,7 @@ public class Server {
         }
     }
 
+
     private void registerShutdownHook() {
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             if (connectionListener != null) {
