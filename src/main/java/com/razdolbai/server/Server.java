@@ -35,6 +35,7 @@ public class Server {
                 try {
                     sessionStore.sendToAll("Server died ;<");
                     sessionStore.closeAll();
+                    connectionListener.close();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
