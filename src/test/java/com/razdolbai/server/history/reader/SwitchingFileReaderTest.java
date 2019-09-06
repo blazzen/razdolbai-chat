@@ -22,6 +22,18 @@ public class SwitchingFileReaderTest {
     private LocalDateTime messageDateTime = null;
     private SwitchingFileReader sut;
 
+
+    private static void cleanRecursivelyDFS(File directory) {
+        for(File currentFile: directory.listFiles()) {
+            if(!currentFile.exists()) return;
+            if(currentFile.isDirectory()) {
+                cleanRecursivelyDFS(currentFile);
+            } else {
+                currentFile.delete();
+            }
+        }
+    }
+
     @Before
     public void beforeTest() throws IOException {
 
@@ -31,22 +43,25 @@ public class SwitchingFileReaderTest {
             directory.mkdirs();
         }
         else {
-            for (File f : directory.listFiles()) {
-                if (!f.isDirectory()) {
-                    f.delete();
-                }
-            }
+            cleanRecursivelyDFS(new File("./resources"));
         }
 
         messageDateTime = LocalDateTime.now();
         sut = new SwitchingFileReader();
     }
 
+    @After
+    public void afterTest() throws  IOException {
+        cleanRecursivelyDFS(new File("./resources"));
+    }
+
+
     @Test
     public void shouldReadFromOneFile() throws IOException {
         SwitchingFileSaver saver = new SwitchingFileSaver();
         String message = "test";
         String message1 = "test1";
+
 
         saver.save(message, messageDateTime);
         saver.save(message1, messageDateTime);
@@ -55,9 +70,11 @@ public class SwitchingFileReaderTest {
         List<String> history = sut.getHistory();
 
         assertThat(history.size()).isEqualTo(2);
+
         assertThat(history.get(0)).isEqualTo(message);
         assertThat(history.get(1)).isEqualTo(message1);
     }
+
 
     @Test
     public void shouldReadFromMultipleFiles() throws IOException {
@@ -69,10 +86,12 @@ public class SwitchingFileReaderTest {
         saver.save(message1, messageDateTime);
         saver.close();
 
+
         List<String> history = sut.getHistory();
         assertThat(history.get(0)).isEqualTo(message);
         assertThat(history.get(1)).isEqualTo(message1);
     }
+
 
 
     @Test
@@ -89,6 +108,7 @@ public class SwitchingFileReaderTest {
 
         File innerDirectory = new File("./resources/History/tmpdir");
         innerDirectory.mkdir();
+
         File lastFile = new File(SwitchingFileSaver.fileNameFormat("history", messageDateTime.plusDays(1), 0));
         lastFile.renameTo(new File("./resources/History/tmpdir/" + lastFile.getName()));
 
@@ -100,23 +120,9 @@ public class SwitchingFileReaderTest {
 
         new File("./resources/History/tmpdir/" + lastFile.getName()).delete();
         innerDirectory.delete();
+
     }
 
-    @After
-    public void afterTest() {
-        String directoryName = Paths.get(".","resources", "History").toString();
-        File directory = new File(directoryName);
-        if (!directory.exists()) {
-            directory.mkdirs();
-        }
-        else {
-            for (File f : directory.listFiles()) {
-                if (!f.isDirectory()) {
-                    f.delete();
-                }
-            }
-        }
-    }
 
 
 }

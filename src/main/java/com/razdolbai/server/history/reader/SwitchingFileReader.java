@@ -24,9 +24,7 @@ public class SwitchingFileReader implements Reader {
         for(File currentFile : files) {
             if(currentFile.isDirectory()) {
                 readAllLinesDFS(currentFile, res);
-            }
-
-            if (currentFile.isFile()) {
+            } else {
                 try (BufferedReader reader = new BufferedReader(new FileReader(currentFile))) {
                     String line;
                     while ( (line = reader.readLine()) != null ) {

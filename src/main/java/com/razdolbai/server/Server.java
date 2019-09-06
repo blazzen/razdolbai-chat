@@ -28,12 +28,14 @@ public class Server {
         }
     }
 
+
     private void registerShutdownHook() {
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             if (connectionListener != null) {
                 try {
                     sessionStore.sendToAll("Server died ;<");
                     sessionStore.closeAll();
+                    connectionListener.close();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

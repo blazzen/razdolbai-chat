@@ -49,7 +49,7 @@ public class PerformanceTest {
             new MyThread(sut).start();
         }
 
-        Thread.sleep(10000000);
+        Thread.sleep(100000000);
     }
 
 
@@ -66,12 +66,12 @@ public class PerformanceTest {
             while (true) {
                 int rand = random.nextInt(100);
 
-                if (rand < 10) {
-                    if (rand == 0) {
+                if (rand < 15) {
+                    if (rand < 2) {
                         sut.getHistory();
                     } else {
                         try {
-                            sut.save("sodjfnewofweiufn;wfiowefniwlefnewifuwn;ofwei pnwuipefw weiof", LocalDateTime.now());
+                            sut.save("sodjfnewofweiufn;wfiowefniwlefnewifuwn;ofwei pnwuipefw weiofsodjfnewofweiufn;wfiowefniwlefnewifuwn;ofwei pnwuipefw weiof", LocalDateTime.now());
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
