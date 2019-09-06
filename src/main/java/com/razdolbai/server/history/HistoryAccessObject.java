@@ -26,8 +26,6 @@ public class HistoryAccessObject implements History {
         readWriteLock = new ReentrantReadWriteLock();
     }
 
-
-
     @Override
     public List<String> getHistory() {
         List<String> history = null;

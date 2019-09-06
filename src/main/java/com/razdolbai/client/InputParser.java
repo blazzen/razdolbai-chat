@@ -15,11 +15,9 @@ class InputParser {
             commandType = input;
         }
 
-        CommandType command;
-        try {
-            command = CommandType.fromString(commandType);
-        } catch (IllegalArgumentException e) {
-            System.out.println(e.getMessage());
+        CommandType command = CommandType.fromString(commandType);
+        if (command.equals(CommandType.UNKNOWN)) {
+            System.out.println("Unknown command: " + commandType);
             return null;
         }
 
