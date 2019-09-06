@@ -16,10 +16,9 @@ public class Client {
     private Client() {
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
 
-        Logger logger = Logger.getLogger("ClientLogger");
-        logger.setLevel(Level.INFO);
+        Logger logger = ClientLogger.createLogger();
 
         try (
                 final Socket socket = new Socket("localhost", 8081);
@@ -37,11 +36,6 @@ public class Client {
                                 new BufferedOutputStream(
                                         server.getOutputStream())))
         ) {
-
-            FileHandler handler = new FileHandler("client.log", true);
-            SimpleFormatter simple = new SimpleFormatter();
-            handler.setFormatter(simple);
-            logger.addHandler(handler);
             logger.log(Level.INFO, "Client started");
 
             Thread thread = new Thread(new OutputConsoleWriter(consoleOutput, in, logger));

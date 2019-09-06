@@ -1,5 +1,6 @@
 package com.razdolbai.server.history.saver;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -37,7 +38,7 @@ public class SwitchingSaverTest {
         messageDateTime = LocalDateTime.now();
     }
 
-    @Ignore
+
     @Test
     public void shouldSaveAndNotSwitchIfLimitWasNotReachedAndSameDate() throws IOException {
         String filename = SwitchingFileSaver.fileNameFormat("history", messageDateTime,0);
@@ -110,5 +111,21 @@ public class SwitchingSaverTest {
 
         reader1.close();
         reader2.close();
+    }
+
+    @After
+    public void afterTest() {
+        String directoryName = Paths.get(".","resources", "History").toString();
+        File directory = new File(directoryName);
+        if (!directory.exists()) {
+            directory.mkdirs();
+        }
+        else {
+            for (File f : directory.listFiles()) {
+                if (!f.isDirectory()) {
+                    f.delete();
+                }
+            }
+        }
     }
 }
