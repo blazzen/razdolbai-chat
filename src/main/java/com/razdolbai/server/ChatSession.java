@@ -14,15 +14,13 @@ import java.time.LocalDateTime;
 
 public class ChatSession implements Session {
     private String username;
-    private Socket socket;
     private BufferedReader socketIn;
     private PrintWriter socketOut;
     private CommandFactory commandFactory;
     private boolean isClosed = false;
 
-    ChatSession(String username, Socket socket, BufferedReader socketIn, PrintWriter socketOut, CommandFactory commandFactory) {
+    ChatSession(String username, BufferedReader socketIn, PrintWriter socketOut, CommandFactory commandFactory) {
         this.username = username;
-        this.socket = socket;
         this.socketIn = socketIn;
         this.socketOut = socketOut;
         this.commandFactory = commandFactory;

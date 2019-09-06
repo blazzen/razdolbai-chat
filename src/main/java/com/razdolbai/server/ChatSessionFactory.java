@@ -20,6 +20,6 @@ public class ChatSessionFactory implements SessionFactory {
                 new OutputStreamWriter(
                         new BufferedOutputStream(
                                 socket.getOutputStream())));
-        return new ChatSession(null, socket, in, out, commandFactory);
+        return new ChatSession(null, in, out, commandFactory);
     }
 }

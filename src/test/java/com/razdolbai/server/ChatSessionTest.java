@@ -6,6 +6,7 @@ import com.razdolbai.server.exceptions.ChatException;
 import com.razdolbai.server.exceptions.OccupiedNicknameException;
 import com.razdolbai.server.exceptions.UnidentifiedUserException;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.internal.util.reflection.Whitebox;
 
@@ -25,18 +26,16 @@ public class ChatSessionTest {
     private ChatSession session;
     private PrintWriter socketOut;
     private BufferedReader socketIn;
-    private Socket socket;
     private CommandFactory commandFactory;
     ByteArrayOutputStream ERR = new ByteArrayOutputStream();
 
 
     @Before
     public void setUp() {
-        socket = mock(Socket.class);
         socketIn = mock(BufferedReader.class);
         socketOut = mock(PrintWriter.class);
         commandFactory = mock(ChatCommandFactory.class);
-        session = new ChatSession("user", socket, socketIn, socketOut, commandFactory);
+        session = new ChatSession("user", socketIn, socketOut, commandFactory);
         resetErr();
         captureSysErr();
     }
@@ -65,13 +64,6 @@ public class ChatSessionTest {
         String username = "user";
         session.setUsername(username);
         assertEquals(session.getUsername(), username);
-    }
-
-    @Test
-    public void shouldHandleIOExceptionFromSocketIn() throws IOException, OccupiedNicknameException {
-        doThrow(IOException.class).when(socketIn).readLine();
-        session.run();
-        assertSysErrContains(IOException.class.getName());
     }
 
     @Test
