@@ -15,8 +15,6 @@ public class FileSaver implements Saver {
     private volatile boolean isClosed = false;
 
 
-    public FileSaver () {
-    }
 
     protected void open(String filename) throws  FileExistsException, IOException {
         this.isClosed = false;

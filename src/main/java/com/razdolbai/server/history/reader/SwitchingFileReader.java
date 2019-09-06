@@ -1,5 +1,7 @@
 package com.razdolbai.server.history.reader;
 
+import com.razdolbai.server.history.saver.SwitchingFileSaver;
+
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -7,12 +9,19 @@ import java.util.List;
 
 public class SwitchingFileReader implements Reader {
     private static final int initialCapacity = 2097152 * 5;
+    private String pathname = "./resources/History";
     //About half of a day
+
+    public SwitchingFileReader(){}
+    public SwitchingFileReader(String folder) {
+        this.pathname = pathname + "/" + folder;
+    }
+
 
     @Override
     public List<String> getHistory() {
         ArrayList<String> res  = new ArrayList<>(initialCapacity);
-        readAllLinesDFS(new File("./resources/History"), res);
+        readAllLinesDFS(new File(pathname), res);
         return res;
     }
 

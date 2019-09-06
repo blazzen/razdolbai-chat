@@ -16,7 +16,7 @@ public class SwitchingFileSaver extends FileSaver {
     private int sizeCounter = 0;
     private int fileCounter = 0;
     private final static String pathname = Paths.get(".","resources", "History").toString();
-    private final static String name = "history";
+    private String name = "history";
     private final static String format = ".txt";
     private final static int defaultSizeLimit = 30000;
     //about one file per 5 minute
@@ -31,6 +31,12 @@ public class SwitchingFileSaver extends FileSaver {
     }
 
     private LocalDateTime dateTime;
+
+
+    public SwitchingFileSaver(String folder) throws IOException {
+        this();
+        this.name = folder + "/" + this.name;
+    }
 
     public SwitchingFileSaver(int sizeLimit) throws IOException {
         dateTime = LocalDateTime.now();

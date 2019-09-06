@@ -1,4 +1,4 @@
-package com.razdolbai.server.history;
+package com.razdolbai.server.history.history;
 
 import java.io.IOException;
 import java.time.LocalDateTime;

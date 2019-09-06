@@ -1,4 +1,4 @@
-package com.razdolbai.server.history;
+package com.razdolbai.server.history.history;
 
 import com.razdolbai.server.history.reader.Reader;
 import com.razdolbai.server.history.reader.SwitchingFileReader;
@@ -24,6 +24,11 @@ public class HistoryAccessObject implements History {
         saver = new SwitchingFileSaver();
         reader = new SwitchingFileReader();
         readWriteLock = new ReentrantReadWriteLock();
+    }
+
+    public HistoryAccessObject(String folder) throws IOException{
+        saver = new SwitchingFileSaver(folder);
+        reader = new SwitchingFileReader(folder);
     }
 
     @Override

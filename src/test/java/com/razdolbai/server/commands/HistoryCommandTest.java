@@ -1,7 +1,7 @@
 package com.razdolbai.server.commands;
 
 import com.razdolbai.server.Session;
-import com.razdolbai.server.history.HistoryAccessObject;
+import com.razdolbai.server.history.history.HistoryAccessObject;
 import org.junit.Before;
 import org.junit.Test;
 

@@ -1,21 +1,17 @@
 package com.razdolbai.server.history;
 
 
-import com.razdolbai.server.history.saver.SwitchingFileSaver;
+import com.razdolbai.server.history.history.History;
+import com.razdolbai.server.history.history.HistoryAccessObject;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Random;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 
 public class PerformanceTest {

@@ -1,7 +1,7 @@
 package com.razdolbai.server;
 
 import com.razdolbai.server.commands.*;
-import com.razdolbai.server.history.HistoryAccessObject;
+import com.razdolbai.server.history.history.HistoryAccessObject;
 import com.razdolbai.server.history.saver.Saver;
 import com.razdolbai.server.history.saver.SwitchingFileSaver;
 import org.junit.Before;
