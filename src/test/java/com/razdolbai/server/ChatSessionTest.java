@@ -1,5 +1,6 @@
 package com.razdolbai.server;
 
+import com.razdolbai.common.ChatLogger;
 import com.razdolbai.server.commands.ChangeIdCommand;
 import com.razdolbai.server.commands.CloseCommand;
 import com.razdolbai.server.exceptions.ChatException;
@@ -15,6 +16,7 @@ import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.logging.Logger;
 
 import static org.fest.assertions.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
@@ -36,7 +38,8 @@ public class ChatSessionTest {
         socketIn = mock(BufferedReader.class);
         socketOut = mock(PrintWriter.class);
         commandFactory = mock(ChatCommandFactory.class);
-        session = new ChatSession("user", socket, socketIn, socketOut, commandFactory);
+        Logger logger = ChatLogger.createLogger("ServerTestLogger", "test_server.log");
+        session = new ChatSession("user", socketIn, socketOut, commandFactory, logger);
         resetErr();
         captureSysErr();
     }

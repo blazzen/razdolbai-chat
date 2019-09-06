@@ -2,12 +2,15 @@ package com.razdolbai.server;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.logging.Logger;
 
 public class ChatSessionFactory implements SessionFactory {
     private CommandFactory commandFactory;
+    private final Logger logger;
 
-    public ChatSessionFactory(CommandFactory commandFactory) {
+    public ChatSessionFactory(CommandFactory commandFactory, Logger logger) {
         this.commandFactory = commandFactory;
+        this.logger = logger;
     }
 
     @Override
@@ -20,6 +23,6 @@ public class ChatSessionFactory implements SessionFactory {
                 new OutputStreamWriter(
                         new BufferedOutputStream(
                                 socket.getOutputStream())));
-        return new ChatSession(null, socket, in, out, commandFactory);
+        return new ChatSession(null, in, out, commandFactory, logger);
     }
 }

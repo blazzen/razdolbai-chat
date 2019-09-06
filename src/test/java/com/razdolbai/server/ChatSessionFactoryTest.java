@@ -1,5 +1,6 @@
 package com.razdolbai.server;
 
+import com.razdolbai.common.ChatLogger;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -7,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.util.logging.Logger;
 
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
@@ -19,7 +21,8 @@ public class ChatSessionFactoryTest {
     public void setUp() {
         CommandFactory commandFactoryMock = mock(CommandFactory.class);
         socketMock = mock(Socket.class);
-        sessionFactory = new ChatSessionFactory(commandFactoryMock);
+        Logger logger = ChatLogger.createLogger("ServerTestLogger", "test_server.log");
+        sessionFactory = new ChatSessionFactory(commandFactoryMock, logger);
     }
 
     @Test

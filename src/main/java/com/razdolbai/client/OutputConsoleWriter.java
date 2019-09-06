@@ -34,6 +34,7 @@ public class OutputConsoleWriter implements Runnable {
         if (inputData != null && !inputData.isEmpty()) {
             consoleOutput.println(inputData);
             consoleOutput.flush();
+            logger.log(Level.INFO, inputData);
         }
     }
 }

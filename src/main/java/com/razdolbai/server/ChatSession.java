@@ -9,23 +9,25 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.net.SocketException;
 import java.time.LocalDateTime;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ChatSession implements Session {
     private String username;
-    private Socket socket;
     private BufferedReader socketIn;
     private PrintWriter socketOut;
     private CommandFactory commandFactory;
+    private final Logger logger;
     private boolean isClosed = false;
 
-    ChatSession(String username, Socket socket, BufferedReader socketIn, PrintWriter socketOut, CommandFactory commandFactory) {
+    ChatSession(String username, BufferedReader socketIn, PrintWriter socketOut,
+                CommandFactory commandFactory, Logger logger) {
         this.username = username;
-        this.socket = socket;
         this.socketIn = socketIn;
         this.socketOut = socketOut;
         this.commandFactory = commandFactory;
+        this.logger = logger;
     }
 
     @Override
@@ -38,13 +40,12 @@ public class ChatSession implements Session {
                 processRequest(message);
             }
         } catch (IOException e) {
-            //TODO add logger
+            logger.log(Level.SEVERE, "Exception in session", e);
         }
     }
 
     @Override
     public void send(String message) {
-//            e.printStackTrace();
         socketOut.println(message);
         socketOut.flush();
     }
@@ -52,7 +53,7 @@ public class ChatSession implements Session {
     @Override
     public void close() {
         isClosed = true;
-        System.out.printf("Debug: %s session closed%n", username);
+        logger.log(Level.INFO, String.format("Debug: %s session closed%n", username));
     }
 
     @Override
@@ -77,11 +78,13 @@ public class ChatSession implements Session {
         } catch (ChatException e) {
             processException(e, "Some error has occurred");
         }
-        System.out.printf("Debug: %s %s %s%n", username, timeStamp, message);
+        String logLine = String.format("%s %s %s%n", username, timeStamp, message);
+        System.out.println(logLine);
+        logger.log(Level.INFO, "Debug: " + logLine);
     }
 
     private void processException(Exception e, String message) {
-        e.printStackTrace();
+        logger.log(Level.SEVERE, "Exception in session", e);
         send(message);
     }
 }

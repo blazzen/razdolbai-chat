@@ -3,15 +3,19 @@ package com.razdolbai.server;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Server {
     private ServerSocket connectionListener;
     private SessionFactory sessionFactory;
     private SessionStore sessionStore;
+    private final Logger logger;
 
-    public Server(SessionFactory sessionFactory, SessionStore sessionStore) {
+    public Server(SessionFactory sessionFactory, SessionStore sessionStore, Logger logger) {
         this.sessionFactory = sessionFactory;
         this.sessionStore = sessionStore;
+        this.logger = logger;
     }
 
     void startServer() {
@@ -24,7 +28,7 @@ public class Server {
                 sessionStore.register(session);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.log(Level.SEVERE, "Exception is thrown", e);
         }
     }
 
@@ -37,10 +41,10 @@ public class Server {
                     sessionStore.closeAll();
                     connectionListener.close();
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    logger.log(Level.SEVERE, "Exception in Shutdown Hook", e);
                 }
             }
-            System.out.println("Server closed");
+            logger.log(Level.INFO, "Server closed");
         }));
     }
 }

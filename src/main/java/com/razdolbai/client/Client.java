@@ -1,12 +1,12 @@
 package com.razdolbai.client;
 
+import com.razdolbai.common.ChatLogger;
+
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.logging.SimpleFormatter;
 
 
 public class Client {
@@ -17,8 +17,8 @@ public class Client {
     }
 
     public static void main(String[] args) throws IOException {
-
-        Logger logger = ClientLogger.createLogger();
+        Logger logger = ChatLogger.createLogger("ClientLogger",
+                "client" + Integer.parseInt(args[0]) + ".log");
 
         try (
                 final Socket socket = new Socket("localhost", 8082);
@@ -54,8 +54,5 @@ public class Client {
         } catch (IOException e) {
             logger.log(Level.SEVERE, EXCEPTION_MESSAGE, e);
         }
-
     }
-
-
 }
