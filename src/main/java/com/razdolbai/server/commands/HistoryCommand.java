@@ -1,16 +1,14 @@
 package com.razdolbai.server.commands;
 
+import com.razdolbai.server.Decorator;
 import com.razdolbai.server.Session;
 import com.razdolbai.server.history.HistoryAccessObject;
 
-import java.io.IOException;
 import java.util.List;
 
 public class HistoryCommand implements Command {
     private final Session session;
     private final HistoryAccessObject history;
-
-
     public HistoryCommand(Session session, HistoryAccessObject history) {
         this.session = session;
         this.history = history;
@@ -18,7 +16,7 @@ public class HistoryCommand implements Command {
 
     @Override
     public void execute() {
-        session.send("Chat history: ");
+        session.send(Decorator.getChatHistoryMessage());
         List<String> historyList = history.getHistory();
         for (String mess : historyList) {
             session.send(mess);

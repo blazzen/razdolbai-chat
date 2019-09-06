@@ -1,5 +1,6 @@
 package com.razdolbai.server.commands;
 
+import com.razdolbai.server.Decorator;
 import com.razdolbai.server.Session;
 import com.razdolbai.server.SessionStore;
 import org.junit.Before;
@@ -22,7 +23,7 @@ public class CloseCommandTest {
     @Test
     public void shouldCloseWithMessage(){
         when(mockSession.getUsername()).thenReturn(nickname);
-        String message = nickname + " has left the chat";
+        String message = Decorator.leftMessage(nickname);
         testCloseCommand.execute();
         verify(mockSessionStore).remove(mockSession);
         verify(mockSession).getUsername();
