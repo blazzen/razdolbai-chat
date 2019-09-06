@@ -30,9 +30,7 @@ public class ChatSession implements Session {
     @Override
     public void run() {
         try (
-                BufferedReader myIn = socketIn;
-                PrintWriter myOut = socketOut;
-                Socket mySocket = socket
+                BufferedReader myIn = socketIn
         ) {
             while (!isClosed) {
                 String message = myIn.readLine();
@@ -52,7 +50,7 @@ public class ChatSession implements Session {
     @Override
     public void close() {
         isClosed = true;
-        System.out.printf("Debug: %s session closed" + System.lineSeparator(), username);
+        System.out.printf("Debug: %s session closed%n", username);
     }
 
     @Override
@@ -60,6 +58,7 @@ public class ChatSession implements Session {
         return username;
     }
 
+    @Override
     public void setUsername(String username) {
         this.username = username;
     }
@@ -76,7 +75,7 @@ public class ChatSession implements Session {
         } catch (ChatException e) {
             processException(e, "Some error has occurred");
         }
-        System.out.printf("Debug: %s %s %s" + System.lineSeparator(), username, timeStamp, message);
+        System.out.printf("Debug: %s %s %s%n", username, timeStamp, message);
     }
 
     private void processException(Exception e, String message) {
