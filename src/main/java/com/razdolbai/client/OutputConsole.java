@@ -8,6 +8,9 @@ import java.util.logging.Logger;
 public class OutputConsole {
     private static final String EXCEPTION_MESSAGE = "Exception is thrown";
 
+    private OutputConsole() {
+    }
+
     public static void main(String[] args) {
         Logger logger = Logger.getLogger("ClientLogger");
         logger.setLevel(Level.SEVERE);
