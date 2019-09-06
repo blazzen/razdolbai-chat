@@ -37,7 +37,6 @@ public class SwitchingSaverTest {
         messageDateTime = LocalDateTime.now();
     }
 
-    @Ignore
     @Test
     public void shouldSaveAndNotSwitchIfLimitWasNotReachedAndSameDate() throws IOException {
         String filename = SwitchingFileSaver.fileNameFormat("history", messageDateTime,0);
