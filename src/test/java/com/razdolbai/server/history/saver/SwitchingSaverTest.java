@@ -39,6 +39,7 @@ public class SwitchingSaverTest {
     }
 
 
+
     @Test
     public void shouldSaveAndNotSwitchIfLimitWasNotReachedAndSameDate() throws IOException {
         String filename = SwitchingFileSaver.fileNameFormat("history", messageDateTime,0);
@@ -115,17 +116,12 @@ public class SwitchingSaverTest {
 
     @After
     public void afterTest() {
-        String directoryName = Paths.get(".","resources", "History").toString();
-        File directory = new File(directoryName);
-        if (!directory.exists()) {
-            directory.mkdirs();
-        }
-        else {
-            for (File f : directory.listFiles()) {
-                if (!f.isDirectory()) {
-                    f.delete();
-                }
+        File directory = new File("./resources/History");
+        for (File f : directory.listFiles()) {
+            if (!f.isDirectory()) {
+                f.delete();
             }
         }
+
     }
 }
