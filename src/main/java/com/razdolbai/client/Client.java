@@ -21,7 +21,7 @@ public class Client {
         Logger logger = ClientLogger.createLogger();
 
         try (
-                final Socket socket = new Socket("localhost", 8081);
+                final Socket socket = new Socket("localhost", 8082);
                 final PrintWriter out = new PrintWriter(
                         new OutputStreamWriter(
                                 new BufferedOutputStream(socket.getOutputStream())));

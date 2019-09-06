@@ -68,9 +68,6 @@ public class SwitchingFileReaderTest {
         saver.close();
 
         List<String> history = sut.getHistory();
-        for(String s : history) {
-            System.out.println(s);
-        }
 
         assertThat(history.size()).isEqualTo(2);
 

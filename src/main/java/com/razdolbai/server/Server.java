@@ -15,7 +15,7 @@ public class Server {
     }
 
     void startServer() {
-        try (ServerSocket serverSocket = new ServerSocket(8081)) {
+        try (ServerSocket serverSocket = new ServerSocket(8082)) {
             connectionListener = serverSocket;
             registerShutdownHook();
             while (true) {
